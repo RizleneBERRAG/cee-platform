@@ -37,6 +37,28 @@ const titre = (t) => console.log(`\n── ${t} ──`)
 // Les tables qui bougent légitimement à chaque requête : elles ne prouvent rien ici.
 const IGNORER = new Set(['session', 'session_client', 'journal_champ', 'piece_lue', 'migration_manuelle'])
 
+// ── Colonnes dérivées : un recalcul n'est pas une modification ──
+//
+// `lot.volume_cumac` et `lot.chiffre_affaire` sont une copie, tenue à jour à chaque
+// écriture, de sommes que les écrans recalculent de toute façon en direct : la liste des
+// lots les redéfinit par sous-requête (queries.js), la fiche de lot les additionne
+// elle-même, et l'export EMMY ne lit du lot que son numéro et son délégataire. Vérification
+// faite : **personne ne lit ces deux colonnes**.
+//
+// Sur une base neuve elles valent NULL et le premier enregistrement les remplit. L'invariant
+// « ce formulaire ne change rien » y voyait une modification et échouait — non pas parce que
+// l'application avait tort, mais parce que la photographie comparait un cache. On l'écarte
+// donc, en le nommant.
+const DERIVEES = { lot: ['volume_cumac', 'chiffre_affaire'] }
+
+// ── Tables réécrites en entier : comparer le contenu, pas les identifiants ──
+//
+// « Enregistrer le contenu » d'une liasse fait un DELETE puis des INSERT : les lignes
+// reviennent identiques, avec des identifiants neufs. Rien ne référence `liasse_item.id`
+// — une pièce de dossier est rattachée au TYPE de document, jamais à la ligne de liasse —
+// donc cette rotation est sans conséquence. On compare ces tables sur leur contenu.
+const SANS_IDENTIFIANT = new Set(['liasse_item'])
+
 /**
  * Une photographie de toute la base, table par table, ligne par ligne.
  *
@@ -55,7 +77,11 @@ function photo(essais = 20) {
       const out = {}
       for (const { name } of tables) {
         if (IGNORER.has(name)) continue
-        out[name] = db.prepare(`SELECT * FROM "${name}"`).all().map((l) => JSON.stringify(l)).sort()
+        const aRetirer = [...(DERIVEES[name] || []), ...(SANS_IDENTIFIANT.has(name) ? ['id'] : [])]
+        out[name] = db.prepare(`SELECT * FROM "${name}"`).all().map((l) => {
+          if (aRetirer.length) for (const c of aRetirer) delete l[c]
+          return JSON.stringify(l)
+        }).sort()
       }
       db.close()
       return out
