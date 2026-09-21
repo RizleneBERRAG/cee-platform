@@ -1,0 +1,686 @@
+{
+  "_source": "Fiches d'opérations standardisées publiées par le ministère de la Transition écologique. Chaque valeur ci-dessous a été relevée dans le PDF officiel de la fiche ou dans le catalogue des arrêtés, pas reconstituée. Les URL sont dans _references pour que chaque chiffre soit re-vérifiable.",
+  "_avertissement": "Ces valeurs sont celles de la version EN VIGUEUR relevée. Les dossiers déjà figés gardent leurs montants d'origine : la règle de gel l'impose, et une fiche a souvent changé de forfait depuis. Ne JAMAIS recalculer un dossier ancien avec ces coefficients.",
+  "_references": {
+    "AGRI-TH-117": "https://www.ecologie.gouv.fr/sites/default/files/documents/AGRI-TH-117%20vA65-2%20%C3%A0%20compter%20du%2001-04-2025.pdf",
+    "RES-EC-104": "https://www.ecologie.gouv.fr/sites/default/files/documents/RES-EC-104%20vA62-2%20%C3%A0%20compter%20du%2001-01-2025.pdf",
+    "BAT-EQ-127": "https://www.ecologie.gouv.fr/sites/default/files/documents/BAT-EQ-127%20vA71-5%20%C3%A0%20compter%20du%2001-08-2025%20-%20Luminaire%20%C3%A0%20modules%20LED.pdf",
+    "catalogue": "https://www.ecologie.gouv.fr/sites/default/files/documents/Catalogue%20fiches%20version%20actualis%C3%A9e%2084%C3%A8me%20arr%C3%AAt%C3%A9%20hors%2082%C3%A8me%20arr%C3%AAt%C3%A9.pdf",
+    "abrogation_AGRI-TH-117": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000054171657"
+  },
+  "fiches": [
+    {
+      "code": "AGRI-TH-117",
+      "secteur": "AGRICULTURE",
+      "domaine": "THERMIQUE",
+      "libelle": "Déshumidificateur thermodynamique pour serres",
+      "versions": [
+        {
+          "version": "A65-2",
+          "date_effet": "2025-04-01",
+          "date_fin": "2026-06-03",
+          "motif_fin": "Fiche abrogée par l'arrêté du 29 mai 2026 (JO du 2 juin 2026). Plus aucun engagement possible depuis le 3 juin 2026 ; les opérations engagées avant cette date ne restent valorisables que si la demande de certificats a été déposée avant le 3 juin 2026.",
+          "arrete_reference": "Arrêté du 07/04/2025 — abrogée par l'arrêté du 29/05/2026",
+          "formule_type": "FORFAIT_PAR_UNITE",
+          "unite_variable": "M2",
+          "coefficients": [
+            {
+              "criteres": {},
+              "valeur": 710,
+              "libelle": "710 kWh cumac par m² de surface de serre"
+            }
+          ],
+          "conditions": {
+            "duree_vie_ans": 17,
+            "performance_minimale": "R ≥ 2 L/kWh par unité",
+            "capacite_minimale": "C > 9 L/h pour 1 000 m² de serre",
+            "pose": "par un professionnel",
+            "note": "Le forfait s'applique par m² de serre équipée."
+          }
+        }
+      ]
+    },
+    {
+      "code": "RES-EC-104",
+      "secteur": "RESEAUX",
+      "domaine": "ECLAIRAGE",
+      "libelle": "Rénovation d'éclairage extérieur",
+      "versions": [
+        {
+          "version": "A62-2",
+          "date_effet": "2025-01-01",
+          "date_fin": "2025-11-25",
+          "motif_fin": "Remplacée par la version A77-3 applicable au 26/11/2025 — valeurs non encore relevées.",
+          "arrete_reference": "Catalogue FOS, version A62-2",
+          "formule_type": "FORFAIT_PAR_UNITE",
+          "unite_variable": "U",
+          "coefficients": [
+            {
+              "criteres": {
+                "variante": "GRADATION_ET_DETECTION"
+              },
+              "valeur": 5600,
+              "libelle": "Luminaire avec gradation ET détection de présence"
+            },
+            {
+              "criteres": {
+                "variante": "GRADATION_SEULE"
+              },
+              "valeur": 4000,
+              "libelle": "Luminaire avec gradation seule"
+            },
+            {
+              "criteres": {},
+              "valeur": 4000,
+              "libelle": "Cas général — 4 000 kWh cumac par luminaire déposé"
+            }
+          ],
+          "conditions": {
+            "engagement_avant": "2030-01-01",
+            "efficacite_module_led": "≥ 135 lm/W si température de couleur ≥ 2 500 K, ≥ 110 lm/W sinon",
+            "duree_vie": "L90B50 ≥ 100 000 heures",
+            "mortalite_appareillage": "≤ 10 %",
+            "gradation": "≥ 50 % du flux nominal pendant ≥ 5 heures par nuit",
+            "exclusions": "illuminations de sites, terrains de sport, zones extérieures couvertes",
+            "note": "Le forfait s'applique par luminaire remplacé ou rééquipé. 5 600 kWh cumac si détection de présence en plus de la gradation."
+          }
+        }
+      ]
+    },
+    {
+      "code": "BAT-EQ-127",
+      "secteur": "TERTIAIRE",
+      "domaine": "ECLAIRAGE",
+      "libelle": "Luminaire d'éclairage général à modules LED",
+      "versions": [
+        {
+          "version": "A71-5",
+          "date_effet": "2025-08-01",
+          "date_fin": "2026-02-24",
+          "motif_fin": "Version applicable jusqu'au 24/02/2026 d'après le catalogue ; la suivante n'a pas été relevée.",
+          "arrete_reference": "Catalogue FOS, version A71-5",
+          "formule_type": "FORFAIT_PAR_UNITE",
+          "unite_variable": "W",
+          "coefficients": [
+            {
+              "criteres": {
+                "irc": "irc_inferieur_90",
+                "secteurActivite": "HOTELLERIE",
+                "efficaciteLumineuse": "120-139"
+              },
+              "valeur": 41
+            },
+            {
+              "criteres": {
+                "irc": "irc_inferieur_90",
+                "secteurActivite": "HOTELLERIE",
+                "efficaciteLumineuse": "140-159"
+              },
+              "valeur": 42
+            },
+            {
+              "criteres": {
+                "irc": "irc_inferieur_90",
+                "secteurActivite": "HOTELLERIE",
+                "efficaciteLumineuse": "160-184"
+              },
+              "valeur": 53
+            },
+            {
+              "criteres": {
+                "irc": "irc_inferieur_90",
+                "secteurActivite": "HOTELLERIE",
+                "efficaciteLumineuse": "185+"
+              },
+              "valeur": 67
+            },
+            {
+              "criteres": {
+                "irc": "irc_inferieur_90",
+                "secteurActivite": "SANTE_ENTREPOT_COMMERCE_400M2_PLUS",
+                "efficaciteLumineuse": "120-139"
+              },
+              "valeur": 37
+            },
+            {
+              "criteres": {
+                "irc": "irc_inferieur_90",
+                "secteurActivite": "SANTE_ENTREPOT_COMMERCE_400M2_PLUS",
+                "efficaciteLumineuse": "140-159"
+              },
+              "valeur": 38
+            },
+            {
+              "criteres": {
+                "irc": "irc_inferieur_90",
+                "secteurActivite": "SANTE_ENTREPOT_COMMERCE_400M2_PLUS",
+                "efficaciteLumineuse": "160-184"
+              },
+              "valeur": 49
+            },
+            {
+              "criteres": {
+                "irc": "irc_inferieur_90",
+                "secteurActivite": "SANTE_ENTREPOT_COMMERCE_400M2_PLUS",
+                "efficaciteLumineuse": "185+"
+              },
+              "valeur": 62
+            },
+            {
+              "criteres": {
+                "irc": "irc_inferieur_90",
+                "secteurActivite": "COMMERCE_MOINS_400M2",
+                "efficaciteLumineuse": "120-139"
+              },
+              "valeur": 38
+            },
+            {
+              "criteres": {
+                "irc": "irc_inferieur_90",
+                "secteurActivite": "COMMERCE_MOINS_400M2",
+                "efficaciteLumineuse": "140-159"
+              },
+              "valeur": 39
+            },
+            {
+              "criteres": {
+                "irc": "irc_inferieur_90",
+                "secteurActivite": "COMMERCE_MOINS_400M2",
+                "efficaciteLumineuse": "160-184"
+              },
+              "valeur": 50
+            },
+            {
+              "criteres": {
+                "irc": "irc_inferieur_90",
+                "secteurActivite": "COMMERCE_MOINS_400M2",
+                "efficaciteLumineuse": "185+"
+              },
+              "valeur": 63
+            },
+            {
+              "criteres": {
+                "irc": "irc_inferieur_90",
+                "secteurActivite": "BUREAUX_RESTAURATION",
+                "efficaciteLumineuse": "120-139"
+              },
+              "valeur": 29
+            },
+            {
+              "criteres": {
+                "irc": "irc_inferieur_90",
+                "secteurActivite": "BUREAUX_RESTAURATION",
+                "efficaciteLumineuse": "140-159"
+              },
+              "valeur": 29
+            },
+            {
+              "criteres": {
+                "irc": "irc_inferieur_90",
+                "secteurActivite": "BUREAUX_RESTAURATION",
+                "efficaciteLumineuse": "160-184"
+              },
+              "valeur": 37
+            },
+            {
+              "criteres": {
+                "irc": "irc_inferieur_90",
+                "secteurActivite": "BUREAUX_RESTAURATION",
+                "efficaciteLumineuse": "185+"
+              },
+              "valeur": 47
+            },
+            {
+              "criteres": {
+                "irc": "irc_inferieur_90",
+                "secteurActivite": "ENSEIGNEMENT",
+                "efficaciteLumineuse": "120-139"
+              },
+              "valeur": 24
+            },
+            {
+              "criteres": {
+                "irc": "irc_inferieur_90",
+                "secteurActivite": "ENSEIGNEMENT",
+                "efficaciteLumineuse": "140-159"
+              },
+              "valeur": 24
+            },
+            {
+              "criteres": {
+                "irc": "irc_inferieur_90",
+                "secteurActivite": "ENSEIGNEMENT",
+                "efficaciteLumineuse": "160-184"
+              },
+              "valeur": 31
+            },
+            {
+              "criteres": {
+                "irc": "irc_inferieur_90",
+                "secteurActivite": "ENSEIGNEMENT",
+                "efficaciteLumineuse": "185+"
+              },
+              "valeur": 39
+            },
+            {
+              "criteres": {
+                "irc": "irc_inferieur_90",
+                "secteurActivite": "AUTRES",
+                "efficaciteLumineuse": "120-139"
+              },
+              "valeur": 24
+            },
+            {
+              "criteres": {
+                "irc": "irc_inferieur_90",
+                "secteurActivite": "AUTRES",
+                "efficaciteLumineuse": "140-159"
+              },
+              "valeur": 24
+            },
+            {
+              "criteres": {
+                "irc": "irc_inferieur_90",
+                "secteurActivite": "AUTRES",
+                "efficaciteLumineuse": "160-184"
+              },
+              "valeur": 31
+            },
+            {
+              "criteres": {
+                "irc": "irc_inferieur_90",
+                "secteurActivite": "AUTRES",
+                "efficaciteLumineuse": "185+"
+              },
+              "valeur": 39
+            },
+            {
+              "criteres": {
+                "irc": "irc_90_et_plus_R9_positif",
+                "secteurActivite": "HOTELLERIE",
+                "efficaciteLumineuse": "108-125"
+              },
+              "valeur": 33
+            },
+            {
+              "criteres": {
+                "irc": "irc_90_et_plus_R9_positif",
+                "secteurActivite": "HOTELLERIE",
+                "efficaciteLumineuse": "126-143"
+              },
+              "valeur": 34
+            },
+            {
+              "criteres": {
+                "irc": "irc_90_et_plus_R9_positif",
+                "secteurActivite": "HOTELLERIE",
+                "efficaciteLumineuse": "144-166"
+              },
+              "valeur": 44
+            },
+            {
+              "criteres": {
+                "irc": "irc_90_et_plus_R9_positif",
+                "secteurActivite": "HOTELLERIE",
+                "efficaciteLumineuse": "167+"
+              },
+              "valeur": 56
+            },
+            {
+              "criteres": {
+                "irc": "irc_90_et_plus_R9_positif",
+                "secteurActivite": "SANTE_ENTREPOT_COMMERCE_400M2_PLUS",
+                "efficaciteLumineuse": "108-125"
+              },
+              "valeur": 30
+            },
+            {
+              "criteres": {
+                "irc": "irc_90_et_plus_R9_positif",
+                "secteurActivite": "SANTE_ENTREPOT_COMMERCE_400M2_PLUS",
+                "efficaciteLumineuse": "126-143"
+              },
+              "valeur": 31
+            },
+            {
+              "criteres": {
+                "irc": "irc_90_et_plus_R9_positif",
+                "secteurActivite": "SANTE_ENTREPOT_COMMERCE_400M2_PLUS",
+                "efficaciteLumineuse": "144-166"
+              },
+              "valeur": 40
+            },
+            {
+              "criteres": {
+                "irc": "irc_90_et_plus_R9_positif",
+                "secteurActivite": "SANTE_ENTREPOT_COMMERCE_400M2_PLUS",
+                "efficaciteLumineuse": "167+"
+              },
+              "valeur": 52
+            },
+            {
+              "criteres": {
+                "irc": "irc_90_et_plus_R9_positif",
+                "secteurActivite": "COMMERCE_MOINS_400M2",
+                "efficaciteLumineuse": "108-125"
+              },
+              "valeur": 31
+            },
+            {
+              "criteres": {
+                "irc": "irc_90_et_plus_R9_positif",
+                "secteurActivite": "COMMERCE_MOINS_400M2",
+                "efficaciteLumineuse": "126-143"
+              },
+              "valeur": 32
+            },
+            {
+              "criteres": {
+                "irc": "irc_90_et_plus_R9_positif",
+                "secteurActivite": "COMMERCE_MOINS_400M2",
+                "efficaciteLumineuse": "144-166"
+              },
+              "valeur": 41
+            },
+            {
+              "criteres": {
+                "irc": "irc_90_et_plus_R9_positif",
+                "secteurActivite": "COMMERCE_MOINS_400M2",
+                "efficaciteLumineuse": "167+"
+              },
+              "valeur": 53
+            },
+            {
+              "criteres": {
+                "irc": "irc_90_et_plus_R9_positif",
+                "secteurActivite": "BUREAUX_RESTAURATION",
+                "efficaciteLumineuse": "108-125"
+              },
+              "valeur": 23
+            },
+            {
+              "criteres": {
+                "irc": "irc_90_et_plus_R9_positif",
+                "secteurActivite": "BUREAUX_RESTAURATION",
+                "efficaciteLumineuse": "126-143"
+              },
+              "valeur": 24
+            },
+            {
+              "criteres": {
+                "irc": "irc_90_et_plus_R9_positif",
+                "secteurActivite": "BUREAUX_RESTAURATION",
+                "efficaciteLumineuse": "144-166"
+              },
+              "valeur": 31
+            },
+            {
+              "criteres": {
+                "irc": "irc_90_et_plus_R9_positif",
+                "secteurActivite": "BUREAUX_RESTAURATION",
+                "efficaciteLumineuse": "167+"
+              },
+              "valeur": 40
+            },
+            {
+              "criteres": {
+                "irc": "irc_90_et_plus_R9_positif",
+                "secteurActivite": "ENSEIGNEMENT",
+                "efficaciteLumineuse": "108-125"
+              },
+              "valeur": 19
+            },
+            {
+              "criteres": {
+                "irc": "irc_90_et_plus_R9_positif",
+                "secteurActivite": "ENSEIGNEMENT",
+                "efficaciteLumineuse": "126-143"
+              },
+              "valeur": 19
+            },
+            {
+              "criteres": {
+                "irc": "irc_90_et_plus_R9_positif",
+                "secteurActivite": "ENSEIGNEMENT",
+                "efficaciteLumineuse": "144-166"
+              },
+              "valeur": 26
+            },
+            {
+              "criteres": {
+                "irc": "irc_90_et_plus_R9_positif",
+                "secteurActivite": "ENSEIGNEMENT",
+                "efficaciteLumineuse": "167+"
+              },
+              "valeur": 33
+            },
+            {
+              "criteres": {
+                "irc": "irc_90_et_plus_R9_positif",
+                "secteurActivite": "AUTRES",
+                "efficaciteLumineuse": "108-125"
+              },
+              "valeur": 19
+            },
+            {
+              "criteres": {
+                "irc": "irc_90_et_plus_R9_positif",
+                "secteurActivite": "AUTRES",
+                "efficaciteLumineuse": "126-143"
+              },
+              "valeur": 19
+            },
+            {
+              "criteres": {
+                "irc": "irc_90_et_plus_R9_positif",
+                "secteurActivite": "AUTRES",
+                "efficaciteLumineuse": "144-166"
+              },
+              "valeur": 26
+            },
+            {
+              "criteres": {
+                "irc": "irc_90_et_plus_R9_positif",
+                "secteurActivite": "AUTRES",
+                "efficaciteLumineuse": "167+"
+              },
+              "valeur": 33
+            }
+          ],
+          "conditions": {
+            "engagement_avant": "2030-07-31",
+            "champ": "bâtiments tertiaires existants",
+            "duree_vie": "≥ 50 000 h à 25 °C avec chute de flux ≤ 20 %",
+            "efficacite_minimale": "120 lm/W si IK ≥ 10, 140 lm/W sinon",
+            "facteur_de_dephasage": "≥ 0,9",
+            "distorsion_harmonique": "< 25 %",
+            "risque_photobiologique": "groupe < 2",
+            "modules_led": "remplaçables",
+            "etude_prealable": "dimensionnement par un professionnel RGE",
+            "exclusions": "remplacement de luminaires halogènes"
+          }
+        }
+      ]
+    },
+    {
+      "code": "AGRI-EQ-110",
+      "secteur": "AGRICULTURE",
+      "domaine": "EQUIPEMENT",
+      "libelle": "Séchage solaire par insufflation des produits et co-produits agricoles et forestiers utilisant des panneaux solaires hybrides",
+      "versions": [
+        {
+          "version": "A38-1",
+          "date_effet": "2021-07-31",
+          "date_fin": null,
+          "arrete_reference": "Fiche A38-1, applicable au 31/07/2021",
+          "formule_type": "FORFAIT_PAR_UNITE",
+          "unite_variable": "kW",
+          "coefficients": [
+            {
+              "criteres": {
+                "typeInstallation": "SYSTEME_COMPLET",
+                "typeProduit": "AGRICOLE",
+                "zoneClimatique": "H1"
+              },
+              "valeur": 42700,
+              "libelle": "Système complet neuf (basse température, 25-40 °C) — produits agricoles, zone H1"
+            },
+            {
+              "criteres": {
+                "typeInstallation": "SYSTEME_COMPLET",
+                "typeProduit": "AGRICOLE",
+                "zoneClimatique": "H1_IDF"
+              },
+              "valeur": 42700,
+              "libelle": "Système complet neuf (basse température, 25-40 °C) — produits agricoles, zone H1_IDF"
+            },
+            {
+              "criteres": {
+                "typeInstallation": "SYSTEME_COMPLET",
+                "typeProduit": "AGRICOLE",
+                "zoneClimatique": "H2"
+              },
+              "valeur": 48500,
+              "libelle": "Système complet neuf (basse température, 25-40 °C) — produits agricoles, zone H2"
+            },
+            {
+              "criteres": {
+                "typeInstallation": "SYSTEME_COMPLET",
+                "typeProduit": "AGRICOLE",
+                "zoneClimatique": "H3"
+              },
+              "valeur": 55700,
+              "libelle": "Système complet neuf (basse température, 25-40 °C) — produits agricoles, zone H3"
+            },
+            {
+              "criteres": {
+                "typeInstallation": "SYSTEME_COMPLET",
+                "typeProduit": "FORESTIER",
+                "zoneClimatique": "H1"
+              },
+              "valeur": 102600,
+              "libelle": "Système complet neuf (basse température, 25-40 °C) — produits forestiers, zone H1"
+            },
+            {
+              "criteres": {
+                "typeInstallation": "SYSTEME_COMPLET",
+                "typeProduit": "FORESTIER",
+                "zoneClimatique": "H1_IDF"
+              },
+              "valeur": 102600,
+              "libelle": "Système complet neuf (basse température, 25-40 °C) — produits forestiers, zone H1_IDF"
+            },
+            {
+              "criteres": {
+                "typeInstallation": "SYSTEME_COMPLET",
+                "typeProduit": "FORESTIER",
+                "zoneClimatique": "H2"
+              },
+              "valeur": 116600,
+              "libelle": "Système complet neuf (basse température, 25-40 °C) — produits forestiers, zone H2"
+            },
+            {
+              "criteres": {
+                "typeInstallation": "SYSTEME_COMPLET",
+                "typeProduit": "FORESTIER",
+                "zoneClimatique": "H3"
+              },
+              "valeur": 134100,
+              "libelle": "Système complet neuf (basse température, 25-40 °C) — produits forestiers, zone H3"
+            },
+            {
+              "criteres": {
+                "typeInstallation": "TOITURE_COUPLEE",
+                "typeProduit": "AGRICOLE",
+                "zoneClimatique": "H1"
+              },
+              "valeur": 12200,
+              "libelle": "Toiture solaire couplée à une insufflation existante (60-80 °C) — produits agricoles, zone H1"
+            },
+            {
+              "criteres": {
+                "typeInstallation": "TOITURE_COUPLEE",
+                "typeProduit": "AGRICOLE",
+                "zoneClimatique": "H1_IDF"
+              },
+              "valeur": 12200,
+              "libelle": "Toiture solaire couplée à une insufflation existante (60-80 °C) — produits agricoles, zone H1_IDF"
+            },
+            {
+              "criteres": {
+                "typeInstallation": "TOITURE_COUPLEE",
+                "typeProduit": "AGRICOLE",
+                "zoneClimatique": "H2"
+              },
+              "valeur": 13900,
+              "libelle": "Toiture solaire couplée à une insufflation existante (60-80 °C) — produits agricoles, zone H2"
+            },
+            {
+              "criteres": {
+                "typeInstallation": "TOITURE_COUPLEE",
+                "typeProduit": "AGRICOLE",
+                "zoneClimatique": "H3"
+              },
+              "valeur": 17400,
+              "libelle": "Toiture solaire couplée à une insufflation existante (60-80 °C) — produits agricoles, zone H3"
+            },
+            {
+              "criteres": {
+                "typeInstallation": "TOITURE_COUPLEE",
+                "typeProduit": "FORESTIER",
+                "zoneClimatique": "H1"
+              },
+              "valeur": 16900,
+              "libelle": "Toiture solaire couplée à une insufflation existante (60-80 °C) — produits forestiers, zone H1"
+            },
+            {
+              "criteres": {
+                "typeInstallation": "TOITURE_COUPLEE",
+                "typeProduit": "FORESTIER",
+                "zoneClimatique": "H1_IDF"
+              },
+              "valeur": 16900,
+              "libelle": "Toiture solaire couplée à une insufflation existante (60-80 °C) — produits forestiers, zone H1_IDF"
+            },
+            {
+              "criteres": {
+                "typeInstallation": "TOITURE_COUPLEE",
+                "typeProduit": "FORESTIER",
+                "zoneClimatique": "H2"
+              },
+              "valeur": 19300,
+              "libelle": "Toiture solaire couplée à une insufflation existante (60-80 °C) — produits forestiers, zone H2"
+            },
+            {
+              "criteres": {
+                "typeInstallation": "TOITURE_COUPLEE",
+                "typeProduit": "FORESTIER",
+                "zoneClimatique": "H3"
+              },
+              "valeur": 24100,
+              "libelle": "Toiture solaire couplée à une insufflation existante (60-80 °C) — produits forestiers, zone H3"
+            }
+          ],
+          "conditions": [
+            {
+              "code": "PUISSANCE_THERMIQUE",
+              "libelle": "La quantité saisie est la PUISSANCE THERMIQUE TOTALE INSTALLÉE, en kW — pas une surface ni un nombre de panneaux."
+            },
+            {
+              "code": "ZONE_NON_CHOISIE",
+              "libelle": "La zone climatique découle de la localisation du chantier : elle ne se choisit pas."
+            },
+            {
+              "code": "TYPE_PRODUIT",
+              "libelle": "Le barème forestier est environ 2,4 fois le barème agricole : la nature du produit séché doit être justifiée au dossier."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_barèmes": {
+    "format": "Chaque barème est un TABLEAU de {criteres, valeur, libelle}. Le moteur retient le candidat dont TOUS les critères correspondent au contexte, et parmi eux le plus spécifique. Un objet imbriqué n'est PAS lisible par le moteur — c'était le cas avant le 18/09/2026, et le calcul plantait sur les quatre fiches.",
+    "criteres_reconnus": "secteurActivite, zoneClimatique, charte, typeProduit, typeInstallation, irc, efficaciteLumineuse, variante — ce sont les clés du contexte transmis par l'opération."
+  }
+}

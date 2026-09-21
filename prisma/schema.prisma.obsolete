@@ -1,0 +1,548 @@
+// Plateforme CEE — schéma de données
+// Cible de production : PostgreSQL. SQLite est utilisé ici pour un démarrage sans installation.
+// Pour passer en Postgres : provider = "postgresql" + DATABASE_URL, puis `npx prisma migrate dev`.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────────────────────
+// ORGANISATION & ACCÈS
+// ─────────────────────────────────────────────────────────────
+
+model Organisation {
+  id          String   @id @default(cuid())
+  raisonSocre String
+  siret       String?
+  createdAt   DateTime @default(now())
+
+  unites      UniteAffaire[]
+  users       User[]
+  dossiers    Dossier[]
+}
+
+/// Régie, apporteur d'affaires, agence, sous-traitant.
+/// C'est l'unité de cloisonnement : un utilisateur ne voit que les dossiers de son unité,
+/// sauf permission explicite "voir tout".
+model UniteAffaire {
+  id             String   @id @default(cuid())
+  nom            String
+  type           String   @default("REGIE") // REGIE | AGENCE | INSTALLATEUR | SIEGE
+  actif          Boolean  @default(true)
+  organisationId String
+  organisation   Organisation @relation(fields: [organisationId], references: [id])
+
+  users          User[]
+  dossiers       Dossier[]
+  commissions    Commission[]
+}
+
+/// Rôles hiérarchiques : un rôle hérite des permissions de son parent.
+model Role {
+  id          String  @id @default(cuid())
+  nom         String  @unique
+  parentId    String?
+  parent      Role?   @relation("RoleHierarchie", fields: [parentId], references: [id])
+  enfants     Role[]  @relation("RoleHierarchie")
+
+  permissions RolePermission[]
+  users       User[]
+  /// Restriction optionnelle : ce rôle ne voit que ces étapes du workflow.
+  etapesAutorisees EtapeRole[]
+}
+
+model Permission {
+  id     String @id @default(cuid())
+  code   String @unique // ex. dossier.infos_financieres
+  groupe String         // ex. Dossier, Paramétrage, Dépôt
+  label  String
+
+  roles  RolePermission[]
+}
+
+model RolePermission {
+  roleId       String
+  permissionId String
+  afficher     Boolean @default(false)
+  ajouter      Boolean @default(false)
+  modifier     Boolean @default(false)
+  supprimer    Boolean @default(false)
+  executer     Boolean @default(false)
+
+  role       Role       @relation(fields: [roleId], references: [id])
+  permission Permission @relation(fields: [permissionId], references: [id])
+
+  @@id([roleId, permissionId])
+}
+
+model User {
+  id             String   @id @default(cuid())
+  email          String   @unique
+  nom            String
+  prenom         String
+  actif          Boolean  @default(true)
+  roleId         String
+  role           Role     @relation(fields: [roleId], references: [id])
+  uniteAffaireId String?
+  uniteAffaire   UniteAffaire? @relation(fields: [uniteAffaireId], references: [id])
+  organisationId String
+  organisation   Organisation @relation(fields: [organisationId], references: [id])
+
+  journaux       JournalChamp[]
+  notes          Note[]
+  interventions  Intervention[]
+}
+
+// ─────────────────────────────────────────────────────────────
+// RÉFÉRENTIEL RÉGLEMENTAIRE — versionné et daté
+// ─────────────────────────────────────────────────────────────
+
+/// Une fiche d'opération standardisée (BAR-TH-160, BAT-EQ-127…).
+/// L'identité de la fiche est stable ; ses règles changent au fil des arrêtés,
+/// d'où les versions datées ci-dessous.
+model Fiche {
+  id       String @id @default(cuid())
+  code     String @unique // BAT-EQ-127
+  secteur  String         // BAR | BAT | IND | AGRI | TRA | RES
+  domaine  String         // EN | TH | EQ | UT | SE | BA | CH | EC
+  libelle  String
+
+  versions FicheVersion[]
+  dossiers Dossier[]
+  deals    DealFiche[]
+}
+
+/// Une version datée d'une fiche. C'est ce qu'un dossier référence,
+/// jamais la fiche seule : sinon une suppression d'arrêté réécrit l'historique.
+model FicheVersion {
+  id                String   @id @default(cuid())
+  ficheId           String
+  fiche             Fiche    @relation(fields: [ficheId], references: [id])
+  version           String            // "v40", "A40-4"
+  dateEffet         DateTime          // début de validité (date d'engagement)
+  dateFin           DateTime?         // null = en vigueur
+  arreteReference   String?           // "Arrêté du 23 février 2026"
+  motifFin          String?           // "suppression" | "révision"
+  /// Formule de calcul du cumac, décrite en données plutôt qu'en code
+  /// pour qu'une nouvelle fiche n'exige pas un déploiement.
+  formuleType       String   @default("FORFAIT_PAR_UNITE") // FORFAIT_PAR_UNITE | FORFAIT_PAR_M2 | FORFAIT_FIXE
+  uniteVariable     String?            // "W", "m2", "unité"
+  coefficients      String   @default("[]") // JSON : [{ secteur, zone, ipe, valeur }]
+  conditions        String   @default("[]") // JSON : conditions d'éligibilité contrôlables
+  dossiers          Dossier[]
+
+  @@unique([ficheId, version])
+}
+
+// ─────────────────────────────────────────────────────────────
+// CHAÎNE CEE — tiers
+// ─────────────────────────────────────────────────────────────
+
+model Delegataire {
+  id      String  @id @default(cuid())
+  nom     String
+  oblige  String? // TotalEnergies, Esso…
+  actif   Boolean @default(true)
+
+  deals   Deal[]
+  dossiers Dossier[]
+}
+
+model InstallateurRGE {
+  id            String    @id @default(cuid())
+  raisonSociale String
+  siret         String?
+  actif         Boolean   @default(true)
+
+  certifications CertificationRGE[]
+  dossiers       Dossier[]
+}
+
+/// Une certification RGE a une date de validité : un dossier engagé hors validité est refusé.
+model CertificationRGE {
+  id              String   @id @default(cuid())
+  installateurId  String
+  installateur    InstallateurRGE @relation(fields: [installateurId], references: [id])
+  libelle         String   // "RGE Qualibat 7131"
+  numero          String?
+  dateDebut       DateTime
+  dateFin         DateTime
+}
+
+model BureauControle {
+  id       String  @id @default(cuid())
+  nom      String
+  cofrac   String? // n° d'accréditation COFRAC
+  actif    Boolean @default(true)
+  controles Controle[]
+}
+
+// ─────────────────────────────────────────────────────────────
+// DEAL — le contrat de rachat de kWh cumac, versionné
+// ─────────────────────────────────────────────────────────────
+
+model Deal {
+  id              String   @id @default(cuid())
+  libelle         String
+  description     String?
+  version         String   @default("V1")
+  delegataireId   String
+  delegataire     Delegataire @relation(fields: [delegataireId], references: [id])
+  typeBeneficiaire String  @default("B2B_B2C") // B2B | B2C | B2B_B2C
+  volumeCumac     Float?
+  dateDebut       DateTime
+  dateFin         DateTime?
+  dateFinFacturation DateTime?
+  numContratStandard String?
+  numContratCDP      String?
+  numContratMPR      String?
+  parDefaut       Boolean  @default(false)
+  actif           Boolean  @default(true)
+
+  // Grille de ratios en €/MWh cumac.
+  // Deux régimes (précaire / classique) × trois parties × avec ou sans MPR.
+  ratioDelegPrecaireSansMpr   Float @default(0)
+  ratioDelegPrecaireAvecMpr   Float @default(0)
+  ratioCedePrecaireSansMpr    Float @default(0)
+  ratioCedePrecaireAvecMpr    Float @default(0)
+  ratioGardePrecaireSansMpr   Float @default(0)
+  ratioGardePrecaireAvecMpr   Float @default(0)
+  ratioDelegClassiqueSansMpr  Float @default(0)
+  ratioDelegClassiqueAvecMpr  Float @default(0)
+  ratioCedeClassiqueSansMpr   Float @default(0)
+  ratioCedeClassiqueAvecMpr   Float @default(0)
+  ratioGardeClassiqueSansMpr  Float @default(0)
+  ratioGardeClassiqueAvecMpr  Float @default(0)
+
+  fiches   DealFiche[]
+  dossiers Dossier[]
+}
+
+/// Quelles fiches ce deal couvre, et sous quelle charte.
+model DealFiche {
+  id      String  @id @default(cuid())
+  dealId  String
+  deal    Deal    @relation(fields: [dealId], references: [id])
+  ficheId String
+  fiche   Fiche   @relation(fields: [ficheId], references: [id])
+  charte  String  @default("HORS_CDP") // HORS_CDP | CDP
+  actif   Boolean @default(true)
+
+  @@unique([dealId, ficheId])
+}
+
+// ─────────────────────────────────────────────────────────────
+// WORKFLOW paramétrable : Étape › Catégorie › Statut
+// ─────────────────────────────────────────────────────────────
+
+model Etape {
+  id      String @id @default(cuid())
+  libelle String
+  ordre   Int
+  couleur String @default("#64748b")
+  actif   Boolean @default(true)
+
+  categories CategorieStatut[]
+  roles      EtapeRole[]
+  dossiers   Dossier[]
+}
+
+model EtapeRole {
+  etapeId String
+  roleId  String
+  etape   Etape @relation(fields: [etapeId], references: [id])
+  role    Role  @relation(fields: [roleId], references: [id])
+
+  @@id([etapeId, roleId])
+}
+
+model CategorieStatut {
+  id      String @id @default(cuid())
+  libelle String
+  ordre   Int
+  etapeId String
+  etape   Etape  @relation(fields: [etapeId], references: [id])
+
+  statuts Statut[]
+}
+
+model Statut {
+  id          String  @id @default(cuid())
+  libelle     String
+  ordre       Int
+  couleur     String  @default("#64748b")
+  /// Axe du statut : un dossier en porte plusieurs en parallèle.
+  axe         String  @default("DOSSIER") // DOSSIER | ADMIN | FACTURATION | INSTALLATION | COFRAC | AUDIT
+  /// Marque un statut terminal négatif (annulé, non éligible) : sert au calcul de déperdition.
+  perdu       Boolean @default(false)
+  categorieId String?
+  categorie   CategorieStatut? @relation(fields: [categorieId], references: [id])
+
+  dossiersDossier      Dossier[] @relation("StatutDossier")
+  dossiersAdmin        Dossier[] @relation("StatutAdmin")
+  dossiersFacturation  Dossier[] @relation("StatutFacturation")
+  dossiersInstallation Dossier[] @relation("StatutInstallation")
+  dossiersCofrac       Dossier[] @relation("StatutCofrac")
+}
+
+// ─────────────────────────────────────────────────────────────
+// BÉNÉFICIAIRE & SITE
+// ─────────────────────────────────────────────────────────────
+
+model Beneficiaire {
+  id            String  @id @default(cuid())
+  type          String  @default("SOCIETE") // SOCIETE | PARTICULIER
+  raisonSociale String?
+  siret         String?
+  codeApe       String?
+  nom           String?
+  prenom        String?
+  email         String?
+  telephone     String?
+  /// Catégorie de revenu : décide du régime précaire ou classique.
+  regimeRevenu  String  @default("CLASSIQUE") // PRECAIRE | CLASSIQUE
+  adresse       String?
+  codePostal    String?
+  ville         String?
+
+  dossiers Dossier[]
+}
+
+model Site {
+  id             String  @id @default(cuid())
+  nom            String?
+  adresse        String
+  codePostal     String
+  ville          String
+  departement    String?
+  /// Entrées du calcul cumac.
+  zoneClimatique String? // H1 | H2 | H3
+  secteurActivite String? // BUREAUX | COMMERCE | SANTE | ENSEIGNEMENT | HOTEL_RESTAURANT | AUTRE
+  ageBatiment    Int?
+  surface        Float?
+  typeChauffage  String?
+  qpv            Boolean @default(false)
+  parcelleCadastrale String?
+
+  dossiers Dossier[]
+}
+
+// ─────────────────────────────────────────────────────────────
+// DOSSIER
+// ─────────────────────────────────────────────────────────────
+
+model Dossier {
+  id             String   @id @default(cuid())
+  numero         String   @unique
+  refExterne     String?
+  organisationId String
+  organisation   Organisation @relation(fields: [organisationId], references: [id])
+  uniteAffaireId String?
+  uniteAffaire   UniteAffaire? @relation(fields: [uniteAffaireId], references: [id])
+
+  beneficiaireId String
+  beneficiaire   Beneficiaire @relation(fields: [beneficiaireId], references: [id])
+  siteId         String
+  site           Site         @relation(fields: [siteId], references: [id])
+
+  // Rattachement réglementaire — figé à l'engagement
+  ficheId        String
+  fiche          Fiche        @relation(fields: [ficheId], references: [id])
+  ficheVersionId String
+  ficheVersion   FicheVersion @relation(fields: [ficheVersionId], references: [id])
+  dealId         String?
+  deal           Deal?        @relation(fields: [dealId], references: [id])
+  delegataireId  String?
+  delegataire    Delegataire? @relation(fields: [delegataireId], references: [id])
+  installateurId String?
+  installateur   InstallateurRGE? @relation(fields: [installateurId], references: [id])
+
+  // Paramètres de calcul
+  charte         String   @default("HORS_CDP") // HORS_CDP | CDP
+  avecMpr        Boolean  @default(false)
+  quantite       Float    @default(0) // puissance en W, surface en m², nb d'unités…
+  source         String?
+
+  // Résultats FIGÉS à la date de calcul (jamais recalculés en cascade)
+  volumeCumac      Float?
+  primeDelegataire Float?
+  primeBeneficiaire Float?
+  commissionInstallateur Float?
+  coutPose         Float?
+  commissionApporteur Float?
+  margeNette       Float?
+  dateCalcul       DateTime?
+
+  // Statuts multi-axes
+  etapeId            String?
+  etape              Etape?  @relation(fields: [etapeId], references: [id])
+  statutDossierId    String?
+  statutDossier      Statut? @relation("StatutDossier", fields: [statutDossierId], references: [id])
+  statutAdminId      String?
+  statutAdmin        Statut? @relation("StatutAdmin", fields: [statutAdminId], references: [id])
+  statutFacturationId String?
+  statutFacturation  Statut? @relation("StatutFacturation", fields: [statutFacturationId], references: [id])
+  statutInstallationId String?
+  statutInstallation Statut? @relation("StatutInstallation", fields: [statutInstallationId], references: [id])
+  statutCofracId     String?
+  statutCofrac       Statut? @relation("StatutCofrac", fields: [statutCofracId], references: [id])
+
+  // Jalons
+  dateEngagement   DateTime?
+  dateConfirmation DateTime?
+  datePrevisite    DateTime?
+  datePose         DateTime?
+  dateControle     DateTime?
+  dateAchevement   DateTime?
+  dateDepot        DateTime?
+
+  verrouille Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  documents     DocumentDossier[]
+  notes         Note[]
+  interventions Intervention[]
+  journaux      JournalChamp[]
+  controles     Controle[]
+  lotId         String?
+  lot           Lot?     @relation(fields: [lotId], references: [id])
+  commissions   Commission[]
+}
+
+// ─────────────────────────────────────────────────────────────
+// CONFORMITÉ DOCUMENTAIRE
+// ─────────────────────────────────────────────────────────────
+
+model TypeDocument {
+  id      String  @id @default(cuid())
+  code    String  @unique
+  libelle String
+  actif   Boolean @default(true)
+
+  liasseItems LiasseItem[]
+  documents   DocumentDossier[]
+}
+
+/// Le paquet de pièces exigé par un délégataire pour une fiche donnée.
+/// C'est ce qui permet de dire « ce dossier est complet POUR CE délégataire ».
+model Liasse {
+  id            String @id @default(cuid())
+  libelle       String
+  delegataireId String?
+  ficheCode     String?
+  actif         Boolean @default(true)
+
+  items LiasseItem[]
+}
+
+model LiasseItem {
+  id             String  @id @default(cuid())
+  liasseId       String
+  liasse         Liasse  @relation(fields: [liasseId], references: [id])
+  typeDocumentId String
+  typeDocument   TypeDocument @relation(fields: [typeDocumentId], references: [id])
+  obligatoire    Boolean @default(true)
+  ordre          Int     @default(0)
+
+  @@unique([liasseId, typeDocumentId])
+}
+
+model DocumentDossier {
+  id             String   @id @default(cuid())
+  dossierId      String
+  dossier        Dossier  @relation(fields: [dossierId], references: [id])
+  typeDocumentId String
+  typeDocument   TypeDocument @relation(fields: [typeDocumentId], references: [id])
+  nomFichier     String
+  chemin         String?
+  valideParDelegataire Boolean @default(false)
+  dateValidation DateTime?
+  createdAt      DateTime @default(now())
+}
+
+// ─────────────────────────────────────────────────────────────
+// TERRAIN, COMMUNICATION, CONTRÔLE, VALORISATION
+// ─────────────────────────────────────────────────────────────
+
+model Intervention {
+  id        String   @id @default(cuid())
+  dossierId String
+  dossier   Dossier  @relation(fields: [dossierId], references: [id])
+  type      String   // RDV_COMMERCIAL | PREVISITE | OUVERTURE_CHANTIER | POSE | CONTROLE_CHANTIER | AUDIT | SAV
+  debut     DateTime
+  fin       DateTime?
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  statut    String   @default("PLANIFIE") // PLANIFIE | REALISE | ANNULE
+  compteRendu String?
+}
+
+model Note {
+  id        String   @id @default(cuid())
+  dossierId String
+  dossier   Dossier  @relation(fields: [dossierId], references: [id])
+  canal     String   @default("NOTE") // NOTE | SMS | WHATSAPP | EMAIL | APPEL
+  contenu   String
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+/// Journal de modification AU NIVEAU DU CHAMP.
+/// À prévoir dès le premier jour : c'est ce qui n'est jamais rattrapable après coup.
+model JournalChamp {
+  id         String   @id @default(cuid())
+  dossierId  String?
+  dossier    Dossier? @relation(fields: [dossierId], references: [id])
+  entite     String   // "Dossier", "Deal", "FicheVersion"
+  entiteId   String
+  champ      String
+  ancienne   String?
+  nouvelle   String?
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id])
+  createdAt  DateTime @default(now())
+
+  @@index([entite, entiteId])
+}
+
+model Controle {
+  id               String   @id @default(cuid())
+  dossierId        String
+  dossier          Dossier  @relation(fields: [dossierId], references: [id])
+  bureauControleId String?
+  bureauControle   BureauControle? @relation(fields: [bureauControleId], references: [id])
+  modalite         String   // SUR_SITE | PAR_CONTACT
+  date             DateTime?
+  resultat         String?  // SATISFAISANT | NON_SATISFAISANT | SANS_SUITE
+  motif            String?
+}
+
+model Lot {
+  id           String   @id @default(cuid())
+  numero       String   @unique
+  organisme    String?
+  statut       String   @default("EN_CONSTITUTION") // EN_CONSTITUTION | DEPOSE | INSTRUIT | VALIDE | REJETE
+  dateDepot    DateTime?
+  volumeCumac  Float?
+  chiffreAffaire Float?
+
+  dossiers Dossier[]
+}
+
+model Commission {
+  id             String  @id @default(cuid())
+  dossierId      String
+  dossier        Dossier @relation(fields: [dossierId], references: [id])
+  uniteAffaireId String
+  uniteAffaire   UniteAffaire @relation(fields: [uniteAffaireId], references: [id])
+  montant        Float
+  taux           Float?
+  statut         String  @default("A_PAYER") // A_PAYER | PAYE
+}

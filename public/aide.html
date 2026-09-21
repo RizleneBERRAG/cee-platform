@@ -1,0 +1,786 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guide d'utilisation — Plateforme CEE</title>
+<style>
+  :root{
+    --texte:#0f172a; --gris:#64748b; --trait:#e2e8f0; --fond:#f8fafc;
+    --accent:#3730a3; --ok:#15803d; --warn:#b45309; --danger:#b91c1c;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--fond);color:var(--texte);
+       font:15px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  .page{display:grid;grid-template-columns:270px minmax(0,1fr);gap:0;max-width:1240px;margin:0 auto}
+  nav.som{position:sticky;top:0;align-self:start;max-height:100vh;overflow:auto;
+          padding:26px 18px 40px;border-right:1px solid var(--trait);background:#fff}
+  nav.som b{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--gris);margin:18px 0 6px}
+  nav.som b:first-child{margin-top:0}
+  nav.som a{display:block;padding:3px 0;color:var(--texte);text-decoration:none;font-size:13.5px}
+  nav.som a:hover{color:var(--accent);text-decoration:underline}
+  main{padding:34px 40px 100px;background:#fff;min-width:0}
+  h1{font-size:30px;margin:0 0 6px;letter-spacing:-.4px}
+  .lede{color:var(--gris);font-size:16px;margin:0 0 28px}
+  h2{font-size:21px;margin:44px 0 10px;padding-top:14px;border-top:2px solid var(--trait);letter-spacing:-.2px}
+  h2 .num{color:var(--accent);font-variant-numeric:tabular-nums}
+  h3{font-size:15.5px;margin:24px 0 6px}
+  p,li{margin:8px 0}
+  ul,ol{padding-left:22px}
+  code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;
+             background:#f1f5f9;padding:1px 5px;border-radius:4px}
+  table{border-collapse:collapse;width:100%;margin:12px 0;font-size:14px}
+  th,td{border:1px solid var(--trait);padding:7px 10px;text-align:left;vertical-align:top}
+  th{background:#f8fafc;font-weight:600}
+  .bloc{border-left:4px solid var(--accent);background:#f5f7ff;padding:12px 16px;margin:14px 0;border-radius:0 6px 6px 0}
+  .bloc.att{border-color:var(--warn);background:#fffbeb}
+  .bloc.dgr{border-color:var(--danger);background:#fef2f2}
+  .bloc.ok{border-color:var(--ok);background:#f0fdf4}
+  .bloc p:first-child{margin-top:0}.bloc p:last-child{margin-bottom:0}
+  .etiq{display:inline-block;font-size:11px;text-transform:uppercase;letter-spacing:.5px;
+        font-weight:700;padding:2px 7px;border-radius:99px;color:#fff;vertical-align:middle}
+  kbd{font-family:inherit;font-size:13px;background:#fff;border:1px solid #cbd5e1;
+      border-bottom-width:2px;border-radius:4px;padding:1px 6px}
+  .chemin{color:var(--accent);font-weight:600}
+  .ht{background:#fff;border:1px solid var(--trait);border-radius:8px;padding:14px 18px;margin:16px 0}
+  @media print{
+    nav.som{display:none} .page{display:block} main{padding:0}
+    h2{page-break-after:avoid} .bloc,table{page-break-inside:avoid} body{background:#fff;font-size:11pt}
+  }
+  @media (max-width:900px){ .page{display:block} nav.som{position:static;max-height:none;border-right:0;border-bottom:1px solid var(--trait)} main{padding:24px 18px 60px} }
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="som">
+  <a href="/" style="display:inline-block;margin-bottom:14px;color:var(--accent);font-weight:600">← Retour à la plateforme</a>
+  <b>Pour commencer</b>
+  <a href="#demarrer">1. Allumer le logiciel</a>
+  <a href="#connexion">2. Se connecter</a>
+  <a href="#mots">3. Les 12 mots à connaître</a>
+  <a href="#ecrans">4. La barre de gauche</a>
+
+  <b>Le travail de tous les jours</b>
+  <a href="#bord">5. Le tableau de bord</a>
+  <a href="#creer">6. Créer un dossier</a>
+  <a href="#dossier">7. L'écran d'un dossier</a>
+  <a href="#figer">8. Calculer et figer</a>
+  <a href="#pieces">9. Les pièces</a>
+  <a href="#devis">10. Le devis</a>
+  <a href="#facture">11. La facture et l'avoir</a>
+  <a href="#client">12. L'espace client</a>
+
+  <b>Chercher et déposer</b>
+  <a href="#liste">13. La liste des dossiers</a>
+  <a href="#lots">14. Les lots de dépôt</a>
+  <a href="#simulateur">15. Le simulateur</a>
+  <a href="#referentiel">16. Le référentiel des fiches</a>
+
+  <b>Régler le logiciel</b>
+  <a href="#parametrage">17. Le paramétrage</a>
+  <a href="#comptes">18. Comptes et rôles</a>
+
+  <b>Bon à savoir</b>
+  <a href="#pieges">19. Les 8 pièges</a>
+  <a href="#sauvegarde">20. Sauvegarder</a>
+  <a href="#depannage">21. Que faire si…</a>
+  <a href="#technique">22. Pour votre développeur</a>
+</nav>
+
+<main>
+
+<h1>Guide d'utilisation</h1>
+<p class="lede">Tout le logiciel, expliqué simplement. À lire dans l'ordre la première fois,
+puis à consulter au besoin. Vous pouvez l'imprimer : <kbd>Ctrl</kbd> + <kbd>P</kbd>.</p>
+
+<div class="bloc">
+<p><b>Comment lire ce guide.</b> Chaque chapitre répond à trois questions dans le même ordre :
+<b>à quoi ça sert</b>, <b>ce que vous voyez à l'écran</b>, <b>ce que vous devez faire</b>.
+Les chemins sont écrits comme ceci : <span class="chemin">Dossiers → un dossier → Pièces du dossier</span>.</p>
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<h2 id="demarrer"><span class="num">1.</span> Allumer le logiciel</h2>
+
+<p>Le logiciel tourne <b>sur votre ordinateur</b>. Il n'y a rien à installer chaque matin :
+il faut juste le démarrer.</p>
+
+<h3>Le démarrer</h3>
+<ol>
+  <li>Ouvrez le dossier <code>cee-platform</code>.</li>
+  <li><b>Double-cliquez sur <code>demarrer.bat</code>.</b></li>
+  <li>Une fenêtre noire s'ouvre et écrit des lignes. C'est normal. Attendez.</li>
+  <li>Quand elle affiche <code>Pret. Ouvrez http://localhost:3000</code>, le navigateur s'ouvre tout seul.</li>
+</ol>
+
+<div class="bloc att">
+<p><b>Ne fermez pas la fenêtre noire.</b> C'est elle qui fait tourner le logiciel.
+Si vous la fermez, le site ne répond plus. Vous pouvez la réduire.</p>
+</div>
+
+<h3>Si le navigateur ne s'ouvre pas</h3>
+<p>Ouvrez-le vous-même et tapez dans la barre d'adresse : <code>localhost:3000</code></p>
+
+<h3>L'arrêter</h3>
+<p>Cliquez dans la fenêtre noire, puis <kbd>Ctrl</kbd> + <kbd>C</kbd>. Ou fermez la fenêtre.</p>
+
+<h3>Combien de temps ça met</h3>
+<table>
+  <tr><th>Cas</th><th>Durée</th></tr>
+  <tr><td>Démarrage normal</td><td>20 à 60 secondes</td></tr>
+  <tr><td>Après une mise à jour du logiciel</td><td>2 à 4 minutes (il reconstruit tout)</td></tr>
+  <tr><td>Toute première fois</td><td>3 à 5 minutes</td></tr>
+</table>
+
+<div class="bloc dgr">
+<p><b>Après chaque mise à jour, il FAUT relancer <code>demarrer.bat</code>.</b>
+Tant que vous ne l'avez pas fait, vous continuez à voir l'ancienne version, sans aucun message
+pour vous prévenir.</p>
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<h2 id="connexion"><span class="num">2.</span> Se connecter</h2>
+
+<p>Le logiciel demande une <b>adresse e-mail</b> et un <b>mot de passe</b>.
+L'adresse est celle de votre compte, pas forcément celle que vous utilisez tous les jours.</p>
+
+<div class="bloc att">
+<p><b>Le message « Identifiants incorrects » ne dit jamais lequel des deux est faux.</b>
+C'est volontaire : sinon, n'importe qui pourrait deviner quelles adresses existent.
+Vérifiez d'abord l'adresse (une lettre en trop suffit), ensuite le mot de passe.</p>
+</div>
+
+<h3>Mot de passe perdu</h3>
+<p>Personne ne peut vous le dire — il n'est stocké nulle part en clair, même pas dans la base.
+La seule solution est d'en refaire un :</p>
+<ol>
+  <li>Un compte <b>Gérant</b> va dans <span class="chemin">Comptes et rôles</span>.</li>
+  <li>Sur la ligne de la personne, il clique <b>Réinitialiser</b>.</li>
+  <li>Un lien apparaît à l'écran, du type <code>/activation/xxxx</code>.
+      Il est <b>valable 48 heures</b> et ne sert qu'<b>une fois</b>.</li>
+  <li>La personne ouvre ce lien et choisit elle-même son nouveau mot de passe.</li>
+</ol>
+
+<h3>Mon compte</h3>
+<p>En bas à gauche, votre nom. En cliquant dessus vous trouvez :</p>
+<ul>
+  <li><b>Changer mon mot de passe</b> ;</li>
+  <li><b>Ce que votre rôle vous permet</b> — la liste exacte de vos droits ;</li>
+  <li><b>Mes sessions ouvertes</b> — les navigateurs où vous êtes connecté.
+      Si vous vous êtes connecté sur un ordinateur qui n'est pas le vôtre, fermez la session ici.</li>
+</ul>
+
+<!-- ══════════════════════════════════════════════════ -->
+<h2 id="mots"><span class="num">3.</span> Les 12 mots à connaître</h2>
+
+<p>Vous les connaissez déjà par le métier. Voici ce que le logiciel met derrière chacun.</p>
+
+<table>
+  <tr><th style="width:170px">Mot</th><th>Ce que ça veut dire ici</th></tr>
+  <tr><td><b>Fiche</b></td><td>La fiche d'opération standardisée (ex. <code>AGRI-EQ-110</code>). Elle donne la formule de calcul.</td></tr>
+  <tr><td><b>Version de fiche</b></td><td>La même fiche change avec les arrêtés. Le dossier est rattaché à la version <b>en vigueur à sa date d'engagement</b>, pas à la dernière. Un arrêté de 2027 ne réécrit pas un dossier de 2026.</td></tr>
+  <tr><td><b>cumac</b></td><td>Le volume d'économies d'énergie, en kWh cumac. Affiché en MWh dans les listes (1 MWh = 1 000 kWh).</td></tr>
+  <tr><td><b>Zone climatique</b></td><td>H1, H1_IDF, H2 ou H3. Déduite du code postal du chantier. Elle change le coefficient, donc le volume.</td></tr>
+  <tr><td><b>Secteur</b></td><td>Agriculture, industrie, tertiaire… Choisi sur le site des travaux.</td></tr>
+  <tr><td><b>Charte / CDP</b></td><td>« Coup de pouce » ou hors coup de pouce. Change le prix payé par le délégataire.</td></tr>
+  <tr><td><b>Régime</b></td><td>Classique ou précaire (grande précarité incluse). Change lui aussi le prix.</td></tr>
+  <tr><td><b>MPR</b></td><td>MaPrimeRénov'. Sa présence modifie la valorisation.</td></tr>
+  <tr><td><b>Délégataire</b></td><td>Celui qui achète les CEE et qui vous paie.</td></tr>
+  <tr><td><b>Deal</b></td><td>Votre accord commercial avec un délégataire : les prix au MWh, par régime et par charte. Un deal a des <b>versions</b> datées.</td></tr>
+  <tr><td><b>Liasse</b></td><td>La liste des pièces exigées pour un couple délégataire + fiche. C'est elle qui décide si un dossier est « complet ».</td></tr>
+  <tr><td><b>Lot</b></td><td>Un paquet de dossiers déposés ensemble chez le délégataire.</td></tr>
+</table>
+
+<!-- ══════════════════════════════════════════════════ -->
+<h2 id="ecrans"><span class="num">4.</span> La barre de gauche</h2>
+
+<p>Tout part de là. <b>Vous ne voyez que ce à quoi vous avez droit</b> : un apporteur ne voit
+pas les mêmes entrées qu'un gérant.</p>
+
+<table>
+  <tr><th style="width:200px">Entrée</th><th>À quoi ça sert</th></tr>
+  <tr><td>Tableau de bord</td><td>La photo du jour : où en sont les dossiers, les alertes.</td></tr>
+  <tr><td>Dossiers</td><td>La liste. Chercher, filtrer, exporter, créer.</td></tr>
+  <tr><td>Lots de dépôt</td><td>Préparer les paquets à envoyer au délégataire.</td></tr>
+  <tr><td>Simulateur de marge</td><td>Tester un cas <b>sans créer de dossier</b>.</td></tr>
+  <tr><td>Référentiel des fiches</td><td>Consulter les fiches, leurs versions, leurs formules.</td></tr>
+  <tr><td>Paramétrage</td><td>Les réglages : délégataires, deals, pièces, installateurs…</td></tr>
+  <tr><td>Comptes et rôles</td><td>Qui a le droit de faire quoi.</td></tr>
+</table>
+
+<!-- ══════════════════════════════════════════════════ -->
+<h2 id="bord"><span class="num">5.</span> Le tableau de bord</h2>
+
+<p><b>À quoi ça sert :</b> voir d'un coup d'œil ce qui avance et ce qui coince.</p>
+
+<h3>Ce que vous voyez</h3>
+<ul>
+  <li><b>Pipeline</b> — combien de dossiers à chaque étape, et le cumac correspondant.
+      Cliquez sur une étape : vous arrivez sur la liste filtrée.</li>
+  <li><b>Radar de conformité</b> — le taux d'opérations non satisfaisantes, comparé au plafond
+      réglementaire (14 % en 2026, 12 % en 2027, 10 % en 2028). Par unité d'affaire et par fiche.
+      <b>Au-dessus du plafond, c'est un risque de sanction</b>, pas une simple statistique.</li>
+  <li><b>Dossiers engagés hors validité de fiche</b> — les dossiers dont la date d'engagement
+      tombe en dehors de la période de validité de la fiche utilisée. À traiter en priorité :
+      ce sont des refus de dépôt en puissance.</li>
+</ul>
+
+<!-- ══════════════════════════════════════════════════ -->
+<h2 id="creer"><span class="num">6.</span> Créer un dossier</h2>
+
+<p><span class="chemin">Dossiers → + Nouveau dossier</span></p>
+<p>L'écran a trois blocs. Remplissez-les de haut en bas.</p>
+
+<h3>1) Bénéficiaire</h3>
+<p>C'est le client final, celui qui fait les travaux. Raison sociale, SIRET, contact.</p>
+
+<h3>2) Site des travaux</h3>
+<p>L'adresse du chantier. <b>Trois champs sont obligatoires : adresse, code postal, ville.</b>
+Le code postal sert à déduire le département et la zone climatique — donc le calcul.
+Ne le laissez jamais approximatif.</p>
+
+<h3>3) Opération et valorisation</h3>
+<ul>
+  <li><b>La fiche</b> (ex. <code>AGRI-EQ-110</code>) ;</li>
+  <li><b>La quantité</b> dans l'unité de la fiche (kW, m², nombre…) ;</li>
+  <li><b>La date d'engagement</b> — c'est elle qui choisit la version de fiche.
+      Une date fausse donne un calcul faux, sans message d'erreur ;</li>
+  <li><b>Le deal</b> — donc le délégataire et les prix.</li>
+</ul>
+
+<p>À la validation, le dossier reçoit son <b>numéro</b> et s'ouvre.</p>
+
+<!-- ══════════════════════════════════════════════════ -->
+<h2 id="dossier"><span class="num">7.</span> L'écran d'un dossier</h2>
+
+<p>C'est l'écran central du logiciel. Il est long : on le parcourt de haut en bas.</p>
+
+<h3>L'en-tête</h3>
+<p>Le numéro, une <b>pastille de statut</b> colorée, et parfois l'étiquette
+<span class="etiq" style="background:#991b1b">verrouillé</span>.</p>
+<p>À droite, les boutons :</p>
+<table>
+  <tr><th style="width:210px">Bouton</th><th>Ce qu'il fait</th></tr>
+  <tr><td><b>Calculer et figer</b> / <b>Recalculer</b></td><td>Arrête les montants sur le dossier. Voir le chapitre 8.</td></tr>
+  <tr><td><b>Aperçu du devis</b></td><td>Ouvre le devis dans un onglet. <b>N'écrit rien</b>, ne prend pas de numéro.</td></tr>
+  <tr><td><b>Aperçu de la facture</b></td><td>Pareil, en filigrane « NON ÉMISE ».</td></tr>
+  <tr><td><b>Émettre la facture</b></td><td>Là, oui : la facture devient réelle et prend un numéro définitif.</td></tr>
+  <tr><td><b>Émettre un avoir</b></td><td>Apparaît une fois la facture émise. Annule la facture proprement.</td></tr>
+  <tr><td><b>Verrouiller</b></td><td>Gèle le dossier : plus aucune modification, plus aucune pièce. À faire au dépôt.</td></tr>
+</table>
+
+<h3>Calcul du volume</h3>
+<p>La fiche retenue, sa version, ses dates de validité, le secteur, la zone, le coefficient,
+et le <b>volume cumac</b>. La ligne grise en dessous explique le calcul en toutes lettres.
+Si le résultat vous surprend, c'est là qu'on comprend pourquoi.</p>
+
+<h3>Valorisation</h3>
+<p>L'argent, ligne par ligne : ce que verse le délégataire, moins la prime cédée au bénéficiaire,
+moins la commission installateur, moins la commission apporteur, égale la <b>marge nette</b>.</p>
+<div class="bloc">
+<p>Les rôles <b>Régie</b> et <b>Apporteur</b> ne voient pas ce bloc. Ce n'est pas seulement caché
+à l'écran : le serveur ne leur envoie pas les chiffres.</p>
+</div>
+
+<h3>Modifier le dossier</h3>
+<p>Les listes déroulantes de statut (les « axes » du pipeline), la quantité, la charte,
+la date d'engagement, la source du lead.</p>
+
+<h3>Site et données réglementaires</h3>
+<p>Adresse, code postal, ville, département, zone climatique, secteur, surface, QPV,
+âge du bâtiment, type de chauffage, parcelle cadastrale.</p>
+<div class="bloc att">
+<p><b>Adresse, code postal et ville ne peuvent pas être vidés.</b> Si vous effacez l'un des trois
+et que vous enregistrez, le logiciel refuse et <b>n'enregistre rien du tout</b> — il vous le dit
+en haut de la page. Corrigez le champ, puis réenregistrez.</p>
+</div>
+
+<h3>Opérations et chantiers</h3>
+<p>Un dossier peut porter <b>plusieurs opérations</b>. Dans ce cas, l'en-tête indique
+« opération principale » : le bloc Calcul du volume montre celle-là, mais le total du dossier
+tient compte de toutes. On ajoute aussi ici les <b>chantiers</b> rattachés.</p>
+
+<h3>Dimensionnement — bureau d'études</h3>
+<p>Deux colonnes : <b>ce que le client a déclaré</b>, et <b>les conclusions</b> du bureau d'études.
+Elles restent séparées exprès : on garde la trace du déclaratif même quand il est démenti.</p>
+<p>Quand les conclusions sont fiables, le bouton <b>« Porter le dimensionnement dans le calcul CEE »</b>
+reprend la quantité retenue dans le dossier. Tant que vous ne cliquez pas, rien ne bouge.</p>
+
+<h3>Parcours commercial</h3>
+<p>Type de lead, état du devis, numéro de devis, rattachement au lot.</p>
+
+<h3>Devis et facture · Réseau public de chaleur · Audit énergétique · Contrôles</h3>
+<p>Quatre petits blocs de saisie réglementaire. Ils alimentent les pièces et le tableau de dépôt.
+<b>Contrôles</b> reçoit les contrôles COFRAC et leurs résultats.</p>
+
+<h3>Journal des modifications</h3>
+<p>Qui a changé quoi, quand, avant et après. Champ par champ. Personne ne peut l'effacer.
+C'est votre preuve en cas de litige.</p>
+
+<h3>Notes et échanges</h3>
+<p>Le fil de discussion interne du dossier. Écrivez-y ce que vous diriez au téléphone :
+« client rappelle lundi », « manque le RIB ». Ce n'est pas visible par le client.</p>
+
+<h3>Conditions d'éligibilité de la fiche</h3>
+<p>Ce que la fiche exige pour être valable. À relire avant de déposer.</p>
+
+<!-- ══════════════════════════════════════════════════ -->
+<h2 id="figer"><span class="num">8.</span> Calculer et figer — la règle la plus importante</h2>
+
+<div class="bloc ok">
+<p><b>Le principe en une phrase :</b> le logiciel recalcule en permanence à titre indicatif,
+mais <b>seuls les montants figés comptent</b>.</p>
+</div>
+
+<h3>Ce qui se passe</h3>
+<ul>
+  <li><b>Avant de figer</b> — les montants affichés sont indicatifs. Ils suivent tous vos changements
+      (quantité, zone, deal). Une mention grise le rappelle sous le bloc.</li>
+  <li><b>Vous cliquez « Calculer et figer »</b> — les montants sont écrits sur le dossier,
+      avec la date. L'étiquette <span class="etiq" style="background:#334155">figée le …</span> apparaît.</li>
+  <li><b>Vous modifiez ensuite quelque chose</b> — un bandeau orange prévient :
+      <i>« Les montants figés ne correspondent plus au calcul courant »</i>, avec l'écart en euros.</li>
+</ul>
+
+<div class="bloc att">
+<p><b>Ce bandeau orange n'est pas une erreur.</b> Il vous laisse le choix. Deux cas :</p>
+<ul>
+<li>La nouvelle situation est la bonne → cliquez <b>Recalculer</b>, le dossier se met à jour.</li>
+<li>Vous avez déjà signé un devis sur les anciens montants → <b>ne recalculez pas</b>.
+    Le dossier doit rester sur ce que le client a signé.</li>
+</ul>
+</div>
+
+<p>Tant que vous n'avez pas recalculé, les montants du dossier restent ceux du jour du figeage.
+Le devis et la facture utilisent ces montants-là.</p>
+
+<!-- ══════════════════════════════════════════════════ -->
+<h2 id="pieces"><span class="num">9.</span> Les pièces du dossier</h2>
+
+<p><b>À quoi ça sert :</b> savoir, sans réfléchir, s'il manque quelque chose avant le dépôt.</p>
+
+<h3>Ce que vous voyez</h3>
+<p>Une barre de progression, un pourcentage, et une pastille :</p>
+<table>
+  <tr><td style="width:230px"><span class="etiq" style="background:#15803d">Complet et validé</span></td><td>Rien ne manque, tout est validé. Déposable.</td></tr>
+  <tr><td><span class="etiq" style="background:#b45309">N pièce(s) en attente</span></td><td>Tout est là, mais il reste à valider.</td></tr>
+  <tr><td><span class="etiq" style="background:#b91c1c">N pièce(s) manquante(s)</span></td><td>Il manque des pièces obligatoires.</td></tr>
+</table>
+
+<p>Puis le tableau des pièces attendues. Les obligatoires portent une <b>*</b>,
+les autres sont marquées « (facultative) ».</p>
+
+<div class="bloc">
+<p><b>La liste vient de la liasse</b> paramétrée pour ce couple délégataire + fiche.
+Si vous lisez <i>« Aucune liasse n'est paramétrée »</i>, ce n'est pas un bug : il faut créer la
+liasse dans <span class="chemin">Paramétrage → Pièces</span>, sinon le logiciel ne peut rien contrôler.</p>
+</div>
+
+<h3>Déposer une pièce</h3>
+<ol>
+  <li>Choisissez le <b>type de pièce</b> dans la liste ;</li>
+  <li>Choisissez le <b>fichier</b> ;</li>
+  <li>Cliquez <b>Déposer la pièce</b>.</li>
+</ol>
+<p>Formats acceptés : PDF, images, Word, Excel, ZIP. Jusqu'à la taille indiquée sous le formulaire.</p>
+
+<div class="bloc">
+<p><b>Trois choses que le logiciel fait tout seul :</b></p>
+<ul>
+<li>il vérifie le type <b>d'après le contenu du fichier</b>, pas d'après son extension —
+    un <code>.pdf</code> qui est en réalité une photo est refusé ;</li>
+<li>il ne stocke pas deux fois un fichier déjà présent à l'identique ;</li>
+<li>il refuse tout dépôt si le dossier est verrouillé.</li>
+</ul>
+<p>Quand une pièce est refusée, un bandeau rouge en haut de la page dit pourquoi.</p>
+</div>
+
+<h3>Valider, voir, retirer</h3>
+<ul>
+  <li><b>voir</b> — ouvre le document dans un onglet, sans le télécharger ;</li>
+  <li>cliquer sur le nom du fichier — le télécharge ;</li>
+  <li><b>Valider</b> — c'est vous qui dites « cette pièce convient au délégataire ».
+      Le bouton devient <b>Invalider</b> si vous changez d'avis ;</li>
+  <li><b>Retirer</b> — enlève la pièce du dossier.</li>
+</ul>
+
+<!-- ══════════════════════════════════════════════════ -->
+<h2 id="devis"><span class="num">10.</span> Le devis</h2>
+
+<p>Deux gestes très différents, à ne pas confondre.</p>
+
+<table>
+  <tr><th style="width:210px">Geste</th><th>Effet</th></tr>
+  <tr><td><b>Aperçu du devis</b></td><td>Ouvre le document. <b>N'écrit rien.</b> Vous pouvez cliquer cent fois.</td></tr>
+  <tr><td><b>Émettre</b> (bloc commercial)</td><td>Attribue le numéro définitif et fige le contenu.</td></tr>
+</table>
+
+<h3>Ce que le devis contient tout seul</h3>
+<ul>
+  <li>vos coordonnées et celles du client ;</li>
+  <li>le détail de l'opération et les montants figés ;</li>
+  <li>la prime CEE cédée ;</li>
+  <li>les mentions légales obligatoires, dont la <b>garantie décennale</b> (art. L.243-2) ;</li>
+  <li>les conditions de règlement.</li>
+</ul>
+
+<div class="bloc att">
+<p><b>Si une mention ressemble à « — » ou à un trou</b>, c'est qu'une information manque dans
+<span class="chemin">Paramétrage</span> (SIRET, assurance décennale, numéro RGE…).
+Le logiciel n'invente jamais une mention légale : il préfère afficher un vide visible.</p>
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<h2 id="facture"><span class="num">11.</span> La facture et l'avoir</h2>
+
+<h3>La règle</h3>
+<div class="bloc dgr">
+<p><b>Une facture émise ne se modifie jamais.</b> Ni le montant, ni les lignes, ni le numéro.
+C'est la loi, et le logiciel l'applique sans exception. Pour corriger, on émet un <b>avoir</b>.</p>
+</div>
+
+<h3>Les trois gestes</h3>
+<ol>
+  <li><b>Aperçu de la facture</b> — le document s'affiche avec le filigrane
+      <b>« NON ÉMISE »</b> en travers. Rien n'est écrit. Servez-vous-en pour relire.</li>
+  <li><b>Émettre la facture</b> — le numéro définitif est attribué, les lignes sont recopiées
+      et gelées. À partir de là, l'aperçu devient une réimpression à l'identique.</li>
+  <li><b>Émettre un avoir</b> — apparaît une fois la facture émise. L'avoir est la copie
+      négative de la facture, et il pointe vers elle. Vous pouvez ensuite refacturer proprement.</li>
+</ol>
+
+<h3>Ce qui est sur la facture, imposé par la loi</h3>
+<ul>
+  <li>le numéro de TVA intracommunautaire, calculé automatiquement d'après le SIREN ;</li>
+  <li>les <b>pénalités de retard</b> et l'<b>indemnité forfaitaire de 40 €</b> (art. L.441-10 et D.441-5) ;</li>
+  <li>un délai de règlement qui ne peut pas dépasser 60 jours.</li>
+</ul>
+
+<div class="bloc">
+<p><b>Pourquoi l'émission n'est pas un simple lien.</b> Émettre consomme un numéro de votre série.
+Si c'était un lien, un rafraîchissement de page ou un « retour arrière » pourrait en brûler un
+et trouer la numérotation — ce qu'un contrôle fiscal remarque. C'est pour ça que c'est un bouton
+et pas un lien.</p>
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<h2 id="client"><span class="num">12.</span> L'espace client</h2>
+
+<p><b>À quoi ça sert :</b> laisser le client suivre son dossier et corriger ses informations,
+sans lui ouvrir votre logiciel.</p>
+
+<h3>Créer un accès</h3>
+<p><span class="chemin">Dossier → Espace client → Générer un nouvel accès</span></p>
+<p>Un bandeau bleu apparaît immédiatement avec <b>deux codes</b> :</p>
+<ul>
+  <li>l'<b>identifiant</b> (format <code>XXXX-XXXX-XXXX</code>) ;</li>
+  <li>le <b>code d'accès</b> (format <code>XXXXX-XXXXX</code>).</li>
+</ul>
+
+<div class="bloc dgr">
+<p><b>Notez le code tout de suite.</b> Il n'est pas conservé en clair dans la base :
+il n'existe qu'à cet instant précis, sur cet écran. Si vous fermez la page sans le noter,
+il est <b>définitivement perdu</b> — l'accès existe mais devient inutilisable.
+Dans ce cas : révoquez-le et générez-en un nouveau.</p>
+</div>
+
+<p>Une fois le code transmis au client, cliquez sur le lien
+<b>« effacez-le de la barre d'adresse »</b> : le code disparaît de l'URL et de l'historique
+du navigateur.</p>
+
+<h3>Ce que le client voit</h3>
+<p>Il se connecte sur <code>localhost:3000/espace</code> avec ses deux codes. Il voit :</p>
+<ul>
+  <li><b>Avancement</b> — où en est son dossier ;</li>
+  <li><b>Vos travaux</b> — l'opération, le site ;</li>
+  <li><b>Corriger vos informations</b> — un formulaire (téléphone, e-mail…).</li>
+</ul>
+
+<h3>Ce que le client ne voit jamais</h3>
+<p>La marge nette, la commission installateur, le taux du délégataire, le nom du deal.
+Et sa session ne lui ouvre <b>aucun</b> écran interne, même s'il tape l'adresse à la main.</p>
+
+<h3>Ce qu'il corrige ne change pas le dossier</h3>
+<div class="bloc ok">
+<p>Une correction du client devient une <b>proposition en attente</b>, avec l'avant et l'après.
+C'est vous qui acceptez ou refusez. <b>Le client propose, vous arbitrez.</b></p>
+</div>
+
+<h3>Fermer un accès</h3>
+<p>Bouton <b>Révoquer</b> en face de l'accès. Effet immédiat : le client ne voit plus rien.</p>
+
+<!-- ══════════════════════════════════════════════════ -->
+<h2 id="liste"><span class="num">13.</span> La liste des dossiers</h2>
+
+<h3>Chercher</h3>
+<p>Le panneau de recherche est replié par défaut — après une recherche, on veut voir le résultat,
+pas le formulaire. Ouvrez-le, remplissez ce que vous voulez, validez.</p>
+<p>Les filtres actifs s'affichent en <b>pastilles</b> sous la barre. Cliquez la croix d'une
+pastille pour retirer ce filtre-là, ou <b>Tout effacer</b> pour repartir de zéro.</p>
+
+<h3>Lire les totaux</h3>
+<p>Au-dessus du tableau : le nombre de dossiers, le cumac total, et la marge nette totale —
+<b>de la sélection en cours</b>, pas de toute la base. C'est le moyen le plus rapide de chiffrer
+un portefeuille : filtrez, lisez la ligne.</p>
+
+<h3>Trier, choisir les colonnes, pagination</h3>
+<p>Cliquez l'en-tête d'une colonne pour trier (la flèche indique le sens).
+Les colonnes affichées se choisissent dans le panneau de recherche.
+« Par page » en haut à droite règle le nombre de lignes.</p>
+
+<h3>Exporter</h3>
+<p><b>Exporter (CSV)</b> sort <b>exactement la sélection affichée</b>, filtres compris.
+Le fichier s'ouvre dans Excel.</p>
+
+<h3>Importer</h3>
+<p><b>Importer</b> charge des dossiers en masse depuis un fichier. L'écran vous montre
+ce qui sera créé <b>avant</b> d'écrire quoi que ce soit, et signale les lignes douteuses.
+Relisez cet aperçu : c'est le seul moment où corriger est facile.</p>
+
+<!-- ══════════════════════════════════════════════════ -->
+<h2 id="lots"><span class="num">14.</span> Les lots de dépôt</h2>
+
+<p><b>À quoi ça sert :</b> constituer le paquet de dossiers que vous envoyez au délégataire,
+et sortir le tableau qu'il attend.</p>
+
+<h3>Constituer le lot</h3>
+<ol>
+  <li><span class="chemin">Lots de dépôt</span> → créez un lot (numéro, délégataire) ;</li>
+  <li>dans <b>Ajouter des dossiers</b>, cochez et cliquez <b>Ajouter au lot</b>.</li>
+</ol>
+<div class="bloc">
+<p>Seuls les dossiers <b>en phase Valorisation et hors lot</b> sont proposés. Si un dossier
+n'apparaît pas, c'est presque toujours qu'il n'est pas encore à cette étape, ou qu'il est
+déjà dans un autre lot.</p>
+</div>
+
+<h3>Les deux exports</h3>
+<table>
+  <tr><th style="width:250px">Bouton</th><th>Pour qui</th></tr>
+  <tr><td><b>Récapitulatif interne (CSV)</b></td><td>Pour vous. Tout, montants compris.</td></tr>
+  <tr><td><b>Tableau de dépôt</b></td><td>Pour le délégataire. Les colonnes de l'Annexe 6, dans son format à lui.</td></tr>
+</table>
+
+<h3>Le tableau de dépôt</h3>
+<ul>
+  <li>il reprend les champs réglementaires de l'<b>Annexe 6</b> de l'arrêté du 4 septembre 2014 ;</li>
+  <li>l'ordre et les intitulés des colonnes suivent le <b>gabarit du délégataire</b>, réglé
+      dans <span class="chemin">Paramétrage → Délégataires</span> ;</li>
+  <li>les SIRET et codes postaux sont protégés pour qu'Excel <b>n'efface pas les zéros du début</b> ;</li>
+  <li>les décimales sont à la française (virgule) ;</li>
+  <li><b>si une information obligatoire manque, le logiciel refuse de produire le tableau</b>
+      et vous dit laquelle. C'est voulu : un tableau incomplet, c'est un dépôt refusé
+      trois semaines plus tard.</li>
+</ul>
+
+<h3>Avant d'envoyer</h3>
+<p>Vérifiez que chaque dossier du lot est <b>Complet et validé</b> (chapitre 9), puis
+<b>verrouillez</b> les dossiers déposés. Un dossier verrouillé ne bouge plus, par personne.</p>
+
+<!-- ══════════════════════════════════════════════════ -->
+<h2 id="simulateur"><span class="num">15.</span> Le simulateur de marge</h2>
+
+<p><b>À quoi ça sert :</b> répondre « ça vaut combien ? » au téléphone, sans rien créer.</p>
+<p>Choisissez une fiche, une quantité, une zone, un secteur, un régime, un deal : le résultat
+s'affiche. <b>Rien n'est enregistré.</b> C'est l'outil à utiliser pour tester avant de s'engager,
+plutôt que de créer un dossier bidon qu'il faudra supprimer.</p>
+
+<!-- ══════════════════════════════════════════════════ -->
+<h2 id="referentiel"><span class="num">16.</span> Le référentiel des fiches</h2>
+
+<p><b>À quoi ça sert :</b> consulter les fiches et comprendre d'où sort un chiffre.</p>
+<p>Pour chaque fiche : ses <b>versions</b>, leurs dates de validité, leurs coefficients,
+et la section <b>« Comment la formule est décrite »</b> qui explique le calcul en français.</p>
+<div class="bloc">
+<p><b>Pourquoi les versions comptent.</b> Un arrêté qui change une fiche en 2027 ne doit pas
+changer la marge d'un dossier engagé en 2026. Le logiciel garde donc toutes les versions
+et attribue à chaque dossier celle qui était en vigueur à sa date d'engagement.
+C'est pour ça que <b>la date d'engagement doit être exacte</b>.</p>
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<h2 id="parametrage"><span class="num">17.</span> Le paramétrage</h2>
+
+<p>Les réglages. On y touche rarement, mais tout le reste en dépend.</p>
+
+<table>
+  <tr><th style="width:190px">Onglet</th><th>Ce qu'on y règle</th></tr>
+  <tr><td><b>Délégataires</b></td><td>Leurs coordonnées et le <b>gabarit</b> de leur tableau de dépôt (quelles colonnes, dans quel ordre, sous quel nom).</td></tr>
+  <tr><td><b>Deals</b></td><td>Vos accords commerciaux et leurs <b>versions datées</b> : prix au MWh par régime et par charte. Ne modifiez pas une version passée — créez-en une nouvelle, sinon vous réécrivez l'historique de marge.</td></tr>
+  <tr><td><b>Catalogue produits</b></td><td>Les produits et leurs prix, pour les devis.</td></tr>
+  <tr><td><b>Pièces</b></td><td>Les <b>types de pièces</b> et les <b>liasses</b>. La liasse dit quelles pièces sont exigées pour un délégataire + une fiche, et lesquelles sont obligatoires. C'est ce qui fait marcher le pourcentage de complétude.</td></tr>
+  <tr><td><b>RGE</b></td><td>Les installateurs et leurs certifications, avec les dates. L'onglet signale les <b>certifications échues</b> — un dossier signé avec un RGE périmé est un dossier refusé.</td></tr>
+  <tr><td><b>Workflow</b></td><td>Les <b>étapes du pipeline</b>, les <b>statuts</b> de chaque axe et leurs couleurs, et les <b>unités d'affaire</b>.</td></tr>
+  <tr><td><b>Contrôle</b></td><td>Les bureaux de contrôle (COFRAC).</td></tr>
+</table>
+
+<div class="bloc att">
+<p><b>L'ordre à respecter pour un nouveau délégataire :</b>
+créer le <b>délégataire</b> → créer son <b>deal</b> et sa première version → créer la
+<b>liasse</b> pour chaque fiche concernée. Sans liasse, les dossiers de ce délégataire
+n'auront aucun contrôle de complétude.</p>
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<h2 id="comptes"><span class="num">18.</span> Comptes et rôles</h2>
+
+<h3>Les quatre rôles livrés</h3>
+<table>
+  <tr><th style="width:130px">Rôle</th><th>Ce qu'il peut</th></tr>
+  <tr><td><b>Gérant</b></td><td>Tout, y compris les ratios de marge et les comptes.</td></tr>
+  <tr><td><b>ADV</b></td><td>Pilote les dossiers de bout en bout et voit la marge, mais ne touche ni aux ratios ni aux comptes.</td></tr>
+  <tr><td><b>Régie</b></td><td>Saisit et suit les dossiers de <b>sa seule unité d'affaire</b>. Ne voit aucun montant.</td></tr>
+  <tr><td><b>Apporteur</b></td><td>Consulte l'avancement de ses dossiers. Lecture seule, sans montants.</td></tr>
+</table>
+
+<h3>Les deux droits qui comptent vraiment</h3>
+<ul>
+  <li><b>Voir les montants et la marge</b> — sans lui, les chiffres ne sont pas envoyés par le
+      serveur, pas seulement masqués. C'est ce qui permet d'ouvrir l'outil à une régie
+      sans lui montrer votre grille.</li>
+  <li><b>Voir les dossiers de toutes les unités d'affaire</b> — sans lui, la personne ne voit
+      que son périmètre.</li>
+</ul>
+
+<h3>Créer un compte</h3>
+<ol>
+  <li>Remplissez <b>Ajouter un compte</b> (nom, e-mail, rôle, unité) et validez ;</li>
+  <li>cliquez <b>Lien d'activation</b> sur sa ligne ;</li>
+  <li>transmettez-lui le lien affiché : <b>48 heures, une seule utilisation</b> ;</li>
+  <li>la personne choisit son mot de passe elle-même.</li>
+</ol>
+<div class="bloc ok">
+<p><b>Vous ne créez jamais le mot de passe de quelqu'un d'autre</b>, et vous ne pouvez pas le lire.
+« Réinitialiser » ne révèle aucun mot de passe : ça produit un nouveau lien d'activation.</p>
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<h2 id="pieges"><span class="num">19.</span> Les 8 pièges — à lire une fois, à retenir</h2>
+
+<ol>
+  <li><b>Fermer la fenêtre noire.</b> Le logiciel s'arrête. Réduisez-la, ne la fermez pas.</li>
+  <li><b>Oublier de relancer <code>demarrer.bat</code> après une mise à jour.</b>
+      Vous verrez l'ancienne version sans être prévenu.</li>
+  <li><b>Ne pas noter le code d'accès client.</b> Il est perdu pour toujours. Voir chapitre 12.</li>
+  <li><b>Recalculer un dossier dont le devis est déjà signé.</b> Vous remplacez les montants signés.
+      Lisez le bandeau orange avant de cliquer.</li>
+  <li><b>Se tromper de date d'engagement.</b> Ça change la version de fiche, donc le calcul,
+      sans aucun message.</li>
+  <li><b>Croire qu'on peut modifier une facture émise.</b> Non. Faites un avoir.</li>
+  <li><b>Déposer un lot sans vérifier la complétude.</b> Le refus arrive trois semaines plus tard.</li>
+  <li><b>Oublier de verrouiller après le dépôt.</b> Un dossier déposé qui bouge encore,
+      c'est un écart entre ce que vous avez envoyé et ce que vous avez en base.</li>
+</ol>
+
+<!-- ══════════════════════════════════════════════════ -->
+<h2 id="sauvegarde"><span class="num">20.</span> Sauvegarder</h2>
+
+<p><b>Toutes vos données tiennent dans un seul fichier :</b> <code>db\cee.db</code>,
+dans le dossier <code>cee-platform</code>. Les pièces jointes sont à côté, dans <code>fichiers\</code>.</p>
+
+<h3>La bonne façon de sauvegarder</h3>
+<ol>
+  <li><b>Arrêtez le logiciel</b> (<kbd>Ctrl</kbd> + <kbd>C</kbd> dans la fenêtre noire) ;</li>
+  <li>copiez le dossier <code>db\</code> <b>et</b> le dossier <code>fichiers\</code> ;</li>
+  <li>collez la copie ailleurs (disque externe, cloud), avec la date dans le nom ;</li>
+  <li>redémarrez le logiciel.</li>
+</ol>
+
+<div class="bloc att">
+<p><b>Ne copiez jamais la base pendant que le logiciel tourne.</b> Vous risquez d'obtenir une
+copie incomplète — qui s'ouvre sans erreur, ce qui est pire que pas de copie du tout.</p>
+</div>
+
+<p>Une sauvegarde par semaine, et une avant chaque grosse opération (import en masse,
+mise à jour). Gardez les trois dernières.</p>
+
+<!-- ══════════════════════════════════════════════════ -->
+<h2 id="depannage"><span class="num">21.</span> Que faire si…</h2>
+
+<table>
+  <tr><th style="width:290px">Symptôme</th><th>Quoi faire</th></tr>
+  <tr>
+    <td><b>« demarrer.bat n'est pas reconnu »</b> dans une fenêtre bleue PowerShell</td>
+    <td>Tapez <code>.\demarrer.bat</code> (avec le point et l'antislash). Ou plus simple :
+        fermez la fenêtre et <b>double-cliquez sur le fichier</b>.</td>
+  </tr>
+  <tr>
+    <td><b>« Node.js n'est pas installé »</b></td>
+    <td>Installez la version LTS depuis nodejs.org, puis relancez <code>demarrer.bat</code>.</td>
+  </tr>
+  <tr>
+    <td><b>Le navigateur affiche « site inaccessible »</b></td>
+    <td>La fenêtre noire est fermée ou le démarrage n'est pas fini. Relancez et attendez le message « Pret ».</td>
+  </tr>
+  <tr>
+    <td><b>« Application error: a server-side exception »</b></td>
+    <td>Notez le code <b>Digest</b> affiché, faites une capture, et regardez la fenêtre noire :
+        la vraie cause y est écrite en clair, quelques lignes plus haut. C'est ce texte-là qui permet de corriger.</td>
+  </tr>
+  <tr>
+    <td><b>« Identifiants incorrects »</b></td>
+    <td>Vérifiez l'adresse e-mail caractère par caractère. Puis faites-vous générer un lien d'activation (chapitre 2).</td>
+  </tr>
+  <tr>
+    <td><b>Un champ refuse de s'enregistrer</b></td>
+    <td>Lisez le bandeau en haut de la page : il dit lequel et pourquoi. Rien n'a été enregistré, corrigez et renvoyez.</td>
+  </tr>
+  <tr>
+    <td><b>Le bouton est gris / rien ne se passe</b></td>
+    <td>Soit le dossier est <b>verrouillé</b> (étiquette rouge en haut), soit votre rôle n'a pas ce droit
+        (vérifiez dans <span class="chemin">Mon compte</span>).</td>
+  </tr>
+  <tr>
+    <td><b>Une modification n'apparaît pas</b></td>
+    <td>Rafraîchissez la page (<kbd>F5</kbd>). Si c'est une mise à jour du logiciel : relancez <code>demarrer.bat</code>.</td>
+  </tr>
+  <tr>
+    <td><b>Le tableau de dépôt refuse de sortir</b></td>
+    <td>Normal : une information obligatoire manque. Le message dit laquelle et sur quel dossier.</td>
+  </tr>
+  <tr>
+    <td><b>Le code d'accès client est perdu</b></td>
+    <td>Il est irrécupérable. <b>Révoquez</b> l'accès et générez-en un nouveau.</td>
+  </tr>
+</table>
+
+<div class="bloc">
+<p><b>Quand vous signalez un problème</b>, donnez ces quatre choses : la capture d'écran,
+le numéro du dossier, ce que vous veniez de cliquer, et les dernières lignes de la fenêtre noire.
+Avec ça, la cause se trouve presque toujours du premier coup.</p>
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<h2 id="technique"><span class="num">22.</span> Pour votre développeur</h2>
+
+<p>Cette partie ne sert pas au travail quotidien. Elle est là pour la personne qui maintient
+le logiciel.</p>
+
+<table>
+  <tr><th style="width:210px">Commande</th><th>Ce qu'elle fait</th></tr>
+  <tr><td><code>./tester.sh</code></td><td>Lance toutes les suites de contrôle des règles métier (calculs, arrondis, numérotation, droits).</td></tr>
+  <tr><td><code>./recette.sh</code></td><td>Démarre un vrai serveur sur une <b>copie jetable</b> de la base et pilote un vrai navigateur : chaque écran, chaque formulaire, chaque champ, le cycle commercial et l'espace client.</td></tr>
+  <tr><td><code>node jeu-demo.mjs</code></td><td>Plante un dossier de démonstration complet, pour s'entraîner sans toucher aux vrais dossiers.</td></tr>
+  <tr><td><code>node jeu-demo.mjs --retirer</code></td><td>Retire exactement ce que la commande précédente avait planté, et rien d'autre.</td></tr>
+  <tr><td><code>npm run seed</code></td><td><b>Efface la base</b> et recharge le jeu de démonstration. À n'utiliser que sur une base qu'on accepte de perdre.</td></tr>
+</table>
+
+<div class="bloc att">
+<p><b>Deux règles de sécurité :</b></p>
+<ul>
+<li>n'écrivez jamais dans <code>db\cee.db</code> pendant que le serveur tourne — arrêtez-le d'abord ;</li>
+<li>la mise à niveau du schéma est <b>additive</b> : elle ajoute tables, colonnes et index manquants,
+    et ne supprime jamais rien. Une transformation destructrice reste une décision humaine, écrite à la main.</li>
+</ul>
+</div>
+
+<p style="margin-top:40px;padding-top:16px;border-top:1px solid var(--trait);color:var(--gris);font-size:13px">
+Guide d'utilisation de la plateforme CEE — Net Strategy.
+Une question sans réponse dans ce guide est un manque du guide : signalez-la.
+</p>
+
+</main>
+</div>
+</body>
+</html>

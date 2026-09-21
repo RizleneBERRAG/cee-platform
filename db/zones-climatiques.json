@@ -1,0 +1,27 @@
+{
+  "_avertissement": "Correspondance département → zone climatique, utilisée UNIQUEMENT quand la colonne zone_climatique est absente d'un import. Le zonage réglementaire est défini à la commune et dépend de l'altitude : une commune au-dessus de 400 m dans un département H3 peut basculer en H2. Cette table est donc une approximation de dépannage. VÉRIFIEZ-LA contre l'annexe de l'arrêté avant de l'utiliser sur des dossiers réels, et préférez toujours fournir la colonne zone_climatique dans le CSV.",
+  "_incertains": ["07", "11", "26", "48", "66", "84", "2A", "2B"],
+  "_note_incertains": "Départements où le découpage intra-départemental est le plus marqué : l'import les signale nommément dans son rapport quand il a dû deviner.",
+  "zones": {
+    "01": "H1", "02": "H1", "03": "H1", "04": "H2", "05": "H1",
+    "06": "H3", "07": "H2", "08": "H1", "09": "H2", "10": "H1",
+    "11": "H3", "12": "H2", "13": "H3", "14": "H1", "15": "H1",
+    "16": "H2", "17": "H2", "18": "H2", "19": "H1", "21": "H1",
+    "22": "H2", "23": "H1", "24": "H2", "25": "H1", "26": "H2",
+    "27": "H1", "28": "H1", "29": "H2", "2A": "H3", "2B": "H3",
+    "30": "H3", "31": "H2", "32": "H2", "33": "H2", "34": "H3",
+    "35": "H2", "36": "H2", "37": "H2", "38": "H1", "39": "H1",
+    "40": "H2", "41": "H2", "42": "H1", "43": "H1", "44": "H2",
+    "45": "H1", "46": "H2", "47": "H2", "48": "H2", "49": "H2",
+    "50": "H2", "51": "H1", "52": "H1", "53": "H2", "54": "H1",
+    "55": "H1", "56": "H2", "57": "H1", "58": "H1", "59": "H1",
+    "60": "H1", "61": "H1", "62": "H1", "63": "H1", "64": "H2",
+    "65": "H2", "66": "H3", "67": "H1", "68": "H1", "69": "H1",
+    "70": "H1", "71": "H1", "72": "H2", "73": "H1", "74": "H1",
+    "75": "H1", "76": "H1", "77": "H1", "78": "H1", "79": "H2",
+    "80": "H1", "81": "H2", "82": "H2", "83": "H3", "84": "H2",
+    "85": "H2", "86": "H2", "87": "H1", "88": "H1", "89": "H1",
+    "90": "H1", "91": "H1", "92": "H1", "93": "H1", "94": "H1",
+    "95": "H1"
+  }
+}

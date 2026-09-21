@@ -1,0 +1,77 @@
+# ─────────────────────────────────────────────────────────────
+# Ce que Git ne doit JAMAIS emporter
+#
+# Le dépôt sert à partager le CODE. Les données d'exploitation — dossiers,
+# bénéficiaires, pièces jointes, grilles de rachat, mentions légales des sociétés —
+# n'ont rien à y faire : une fois poussées, elles restent dans l'historique même
+# après suppression, et un dépôt privé peut être rendu public d'un clic.
+#
+# Règle : si une ligne du fichier décrit un vrai client, un vrai prix ou un vrai
+# SIRET, le fichier est ignoré ici.
+# ─────────────────────────────────────────────────────────────
+
+# ── Dépendances et build ──
+node_modules/
+.next/
+out/
+*.log
+*.tsbuildinfo
+
+# ── Environnement local ──
+.env
+.env.*
+!.env.example
+
+# ── Bases de données : toutes, partout, quel que soit le dossier ──
+# La règle est volontairement large. Une base oubliée dans un sous-dossier
+# (`sauvegardes/`, un export daté, une copie de travail) contient les mêmes
+# dossiers clients que la base principale.
+*.db
+*.sqlite
+*.db-journal
+*.db-wal
+*.db-shm
+db/*.avant-*
+
+# ── Sauvegardes locales ──
+sauvegardes/
+backups/
+*.bak
+
+# ── Données d'exploitation relevées sur l'ancien logiciel ──
+# deals-pixel.json : les douze contrats de rachat, en euros par MWh. C'est la
+#   grille de marge de l'entreprise — le document le plus confidentiel du projet.
+# entites.json    : SIRET, capital, assurances des sociétés émettrices.
+db/deals-pixel.json
+db/entites.json
+db/deals-*.csv*
+db/lots-traites.txt
+
+# ── Pièces jointes des dossiers (1,6 Go de documents clients) ──
+fichiers/
+
+# ── Archives : bases complètes de l'ancienne activité ──
+archives/
+
+# ── Logos et visuels appartenant aux sociétés partenaires ──
+public/entites/
+
+# ── Notes de travail internes ──
+# docs/ contient le relevé de l'ancien logiciel (dont la grille de ratios en
+# euros par MWh), le nom des sociétés du groupe, la taille du portefeuille et
+# un brouillon de courrier à un prestataire. Rien de tout cela ne regarde un
+# lecteur du code. La documentation destinée aux autres, c'est README.md et
+# public/aide.html.
+docs/
+
+# ── Réglages d'éditeur : propres à un poste, pas au projet ──
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+
+# ── Sorties de recette et fichiers temporaires ──
+/tmp/
+*.tgz
+recette-*.png
