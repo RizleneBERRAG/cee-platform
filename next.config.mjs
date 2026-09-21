@@ -7,7 +7,25 @@ const nextConfig = {
     staleTimes: { dynamic: 0, static: 0 },
     // Un export de CRM de plusieurs milliers de dossiers dépasse largement la limite
     // par défaut de 1 Mo des actions serveur.
-    serverActions: { bodySizeLimit: '25mb' },
+    serverActions: {
+      bodySizeLimit: '25mb',
+      // ── Pourquoi cette liste ──
+      //
+      // Derrière un proxy (Codespaces, tunnel Cloudflare), le navigateur voit une
+      // adresse en https://…app.github.dev tandis que le serveur, lui, s'entend
+      // appeler « localhost ». Next compare les deux et, par défaut, rejette
+      // l'écart : les actions serveur échouent — donc TOUS les boutons qui
+      // enregistrent, sans message clair à l'écran.
+      //
+      // Déclarer ces domaines ne relâche rien en production : la liste ne
+      // concerne que des hôtes de démonstration, jamais le domaine final.
+      allowedOrigins: [
+        'localhost:3000',
+        '*.app.github.dev',      // Codespaces
+        '*.trycloudflare.com',   // tunnel Cloudflare
+        '*.ngrok-free.app',      // tunnel ngrok
+      ],
+    },
   },
 }
 

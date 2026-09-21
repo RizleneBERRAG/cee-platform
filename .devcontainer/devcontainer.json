@@ -1,0 +1,38 @@
+{
+  "//": [
+    "Ce fichier sert à une seule chose : permettre à quelqu'un d'ESSAYER la plateforme",
+    "sans rien installer, depuis un navigateur, via GitHub Codespaces.",
+    "",
+    "Au démarrage du Codespace, les dépendances sont installées, une base de",
+    "DÉMONSTRATION est créée (npm run seed) et un dossier complet y est planté",
+    "(jeu-demo.mjs), puis le serveur démarre sur le port 3000.",
+    "",
+    "Aucune donnée réelle n'est jamais présente ici : les bases d'exploitation ne",
+    "sont pas dans le dépôt. Ce que le visiteur voit est entièrement fictif.",
+    "",
+    "Pour rendre le lien partageable : onglet « Ports » → ligne 3000 → clic droit →",
+    "Port Visibility → Public."
+  ],
+
+  "name": "Plateforme CEE — démonstration",
+
+  "// image": "Node 24 : node:sqlite y est disponible sans indicateur, comme sur le poste du gérant.",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:24",
+
+  "postCreateCommand": "npm install --no-audit --no-fund && npm run seed && node jeu-demo.mjs",
+  "postAttachCommand": "npm run dev",
+
+  "forwardPorts": [3000],
+  "portsAttributes": {
+    "3000": {
+      "label": "Plateforme CEE",
+      "onAutoForward": "openBrowser"
+    }
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": ["dbaeumer.vscode-eslint"]
+    }
+  }
+}
