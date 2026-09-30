@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Permet de compiler à côté (NEXT_DIST_DIR=.next-essai) sans écraser la version que sert `next start`.
+  distDir: process.env.NEXT_DIST_DIR || '.next',
   experimental: {
     // Sans cela, le cache routeur du client garde jusqu'à 30 s l'ancienne version
     // d'une page dynamique : après un changement de statut, l'écran affiche encore
