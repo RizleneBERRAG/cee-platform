@@ -1,0 +1,8 @@
+# Fins de ligne LF partout, quel que soit le réglage core.autocrlf du poste.
+#
+# Le dépôt est stocké en LF. Sous Windows, core.autocrlf=true réécrivait les fichiers en CRLF
+# à chaque checkout, stash ou reset : les scripts .sh ne s'exécutaient plus sous bash, et
+# db/schema.sql en CRLF faisait lire ses commentaires comme des colonnes par la mise à niveau
+# automatique (corrigé depuis dans lib/migrations.js, voir schema-crlf.mjs).
+* text=auto eol=lf
+*.bat text eol=crlf
