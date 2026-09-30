@@ -1,6 +1,7 @@
 import './globals.css'
 import { utilisateurConnecte } from '../lib/auth.js'
 import { deconnexion } from '../lib/actions-auth.js'
+import { compteurs } from '../lib/rappels.js'
 
 export const metadata = {
   title: 'Plateforme CEE',
@@ -11,11 +12,16 @@ export const metadata = {
 const LIENS = [
   ['/', 'Tableau de bord', null],
   ['/dossiers', 'Dossiers', 'dossier.voir'],
+  ['/rappels', 'Rappels', 'dossier.voir'],
+  ['/planning', 'Planning', 'dossier.voir'],
+  ['/sav', 'S.A.V', 'dossier.voir'],
   ['/lots', 'Lots de dépôt', 'lot.gerer'],
+  ['/aap', 'Appels à paiement', 'lot.gerer'],
   ['/simulateur', 'Simulateur de marge', 'marge.voir'],
   ['/referentiel', 'Référentiel des fiches', null],
   ['/parametrage', 'Paramétrage', 'referentiel.gerer'],
   ['/utilisateurs', 'Comptes et rôles', 'utilisateur.gerer'],
+  ['/corbeille', 'Corbeille', 'dossier.supprimer'],
   // Le guide est un fichier statique : il reste lisible même quand l'application ne
   // démarre pas, et c'est justement là qu'on en a le plus besoin.
   ['/aide.html', "Guide d'utilisation", null],
@@ -36,6 +42,13 @@ export default async function RootLayout({ children }) {
   }
 
   const visibles = LIENS.filter(([, , perm]) => !perm || u.permissions.includes(perm))
+  // Ce qui attend la personne connectée aujourd'hui : du jour + en retard.
+  let aFaire = 0
+  if (u.permissions.includes('dossier.voir')) {
+    const portee = u.permissions.includes('dossier.tous') ? {} : { uniteId: u.uniteId ?? '—aucune—' }
+    const n = compteurs({ attribueA: u.id, ...portee })
+    aFaire = n.jour + n.retard
+  }
 
   return (
     <html lang="fr">
@@ -48,7 +61,10 @@ export default async function RootLayout({ children }) {
             </div>
             <nav>
               {visibles.map(([href, label]) => (
-                <a key={href} href={href}>{label}</a>
+                <a key={href} href={href}>
+                  {label}
+                  {href === '/rappels' && aFaire > 0 && <span className="badge-nav">{aFaire}</span>}
+                </a>
               ))}
             </nav>
             <div className="compte">

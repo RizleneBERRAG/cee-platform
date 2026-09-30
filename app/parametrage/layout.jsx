@@ -10,6 +10,10 @@ const ONGLETS = [
   ['/parametrage/workflow', 'Étapes et statuts', 'referentiel.gerer'],
   ['/parametrage/controle', 'Bureaux de contrôle', 'referentiel.gerer'],
   ['/parametrage/catalogue', 'Catalogue produits', 'referentiel.gerer'],
+  ['/parametrage/interventions', "Types d'intervention", 'referentiel.gerer'],
+  ['/parametrage/sav', 'S.A.V', 'referentiel.gerer'],
+  ['/parametrage/societes', 'Sociétés émettrices', 'referentiel.gerer'],
+  ['/parametrage/listes', 'Autres listes', 'referentiel.gerer'],
 ]
 
 export default async function LayoutParametrage({ children }) {

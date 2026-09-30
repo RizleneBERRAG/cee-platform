@@ -19,7 +19,8 @@
 cd "$(dirname "$0")"
 
 AUTONOMES="fiches.mjs dimensionnement.mjs operations.mjs commercial.mjs pieces-reprise.mjs site-listes.mjs \
-controles-depot.mjs typage.mjs veille-fiches.mjs deals.mjs devis.mjs facture.mjs emmy.mjs espace-client.mjs qualification.mjs"
+controles-depot.mjs typage.mjs veille-fiches.mjs deals.mjs devis.mjs facture.mjs emmy.mjs espace-client.mjs qualification.mjs \
+schema-crlf.mjs acompte.mjs planning.mjs aap.mjs sav-corbeille.mjs listes-societes.mjs"
 INTEGRATION="param.mjs technique.mjs pieces.mjs"
 
 # ── Les données de démonstration ne doivent pas fausser les contrôles ──

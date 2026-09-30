@@ -1,4 +1,5 @@
-import { get, all } from '../../../lib/db.js'
+import { get, all, db } from '../../../lib/db.js'
+import { valeursListe } from '../../../lib/listes.js'
 import {
   majDocumentsCommerciaux, majReseau, majAudit, enregistrerControle,
 } from '../../../lib/actions-technique.js'
@@ -20,14 +21,30 @@ import {
 const opt = (liste) => liste.map(([v, l]) => <option key={v} value={v}>{l}</option>)
 const jour = (v) => (v || '').slice(0, 10)
 
-export default function BlocsTechniques({ dossierId, d, modifiable }) {
+/**
+ * `blocs` : les blocs à afficher, parmi devis, reseau, audit, controles. Tous par défaut.
+ * La fiche dossier les répartit entre ses onglets ; chacun garde sa propre action.
+ */
+export default function BlocsTechniques({ dossierId, d, modifiable, blocs = null }) {
+  const voir = (cle) => !blocs || blocs.includes(cle)
   const audit = get('SELECT * FROM audit_energetique WHERE dossier_id = ?', [dossierId]) || {}
   const controles = all('SELECT * FROM controle WHERE dossier_id = ? ORDER BY passage', [dossierId])
   const bureaux = all('SELECT * FROM bureau_controle ORDER BY actif DESC, nom')
   const parBureau = new Map(bureaux.map((b) => [b.id, b]))
 
+  // Suggestions tirées des listes du paramétrage ; une saisie libre reste acceptée.
+  const suggestions = (id, liste) => (
+    <datalist id={id}>{valeursListe(db(), liste).map((x) => <option key={x.id} value={x.libelle}>{x.donnees.version ? `version ${x.donnees.version}` : x.donnees.type || ''}</option>)}</datalist>
+  )
+
   return (
     <>
+      {/* Le composant est rendu dans plusieurs onglets : chaque liste de suggestions n'accompagne
+          que le bloc qui s'en sert, pour qu'un identifiant n'existe qu'une fois dans la page. */}
+      {voir('reseau') && suggestions('liste-gestionnaire-reseau', 'gestionnaire_reseau')}
+      {voir('reseau') && suggestions('liste-societe-exploitation', 'societe_exploitation')}
+      {voir('audit') && suggestions('liste-logiciel-audit', 'logiciel_audit')}
+      {voir('devis') && (<>
       {/* ── Devis et facture ─────────────────────────────────── */}
       <form action={majDocumentsCommerciaux} className="card" style={{ marginTop: 14 }}>
         <input type="hidden" name="dossier_id" value={dossierId} />
@@ -67,7 +84,9 @@ export default function BlocsTechniques({ dossierId, d, modifiable }) {
         )}
         <button className="btn primary" style={{ marginTop: 12 }} disabled={!modifiable}>Enregistrer</button>
       </form>
+      </>)}
 
+      {voir('reseau') && (<>
       {/* ── Réseau public de chaleur ─────────────────────────── */}
       <form action={majReseau} className="card" style={{ marginTop: 14 }}>
         <input type="hidden" name="dossier_id" value={dossierId} />
@@ -87,7 +106,7 @@ export default function BlocsTechniques({ dossierId, d, modifiable }) {
           </div>
           <div className="field">
             <label>Gestionnaire de réseau</label>
-            <input key={`rg-${d.reseau_gestionnaire}`} name="reseau_gestionnaire"
+            <input key={`rg-${d.reseau_gestionnaire}`} name="reseau_gestionnaire" list="liste-gestionnaire-reseau"
                    defaultValue={d.reseau_gestionnaire || ''} disabled={!modifiable} />
           </div>
           <div className="field">
@@ -97,7 +116,7 @@ export default function BlocsTechniques({ dossierId, d, modifiable }) {
           </div>
           <div className="field">
             <label>Société d'exploitation</label>
-            <input key={`re-${d.reseau_exploitant}`} name="reseau_exploitant"
+            <input key={`re-${d.reseau_exploitant}`} name="reseau_exploitant" list="liste-societe-exploitation"
                    defaultValue={d.reseau_exploitant || ''} disabled={!modifiable} />
           </div>
         </div>
@@ -115,7 +134,9 @@ export default function BlocsTechniques({ dossierId, d, modifiable }) {
         )}
         <button className="btn primary" style={{ marginTop: 12 }} disabled={!modifiable}>Enregistrer</button>
       </form>
+      </>)}
 
+      {voir('audit') && (<>
       {/* ── Audit énergétique ────────────────────────────────── */}
       <form action={majAudit} className="card" style={{ marginTop: 14 }}>
         <input type="hidden" name="dossier_id" value={dossierId} />
@@ -174,7 +195,7 @@ export default function BlocsTechniques({ dossierId, d, modifiable }) {
           </div>
           <div className="field">
             <label>Logiciel</label>
-            <input key={`lo-${audit.logiciel}`} name="logiciel" defaultValue={audit.logiciel || ''} disabled={!modifiable} />
+            <input key={`lo-${audit.logiciel}`} name="logiciel" list="liste-logiciel-audit" defaultValue={audit.logiciel || ''} disabled={!modifiable} />
           </div>
           <div className="field">
             <label>Éditeur</label>
@@ -214,7 +235,9 @@ export default function BlocsTechniques({ dossierId, d, modifiable }) {
         )}
         <button className="btn primary" style={{ marginTop: 12 }} disabled={!modifiable}>Enregistrer l'audit</button>
       </form>
+      </>)}
 
+      {voir('controles') && (<>
       {/* ── Contrôles COFRAC ─────────────────────────────────── */}
       <div className="card" style={{ marginTop: 14 }}>
         <h2>Contrôles</h2>
@@ -324,12 +347,15 @@ export default function BlocsTechniques({ dossierId, d, modifiable }) {
           </p>
         )}
       </div>
+      </>)}
 
+      {voir('reseau') && (<>
       {d.reseau_statut && (
         <p className="muted" style={{ fontSize: 11.5, marginTop: 8 }}>
           Réseau : {libelleReseau(d.reseau_statut)}.
         </p>
       )}
+      </>)}
     </>
   )
 }

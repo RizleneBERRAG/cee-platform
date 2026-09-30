@@ -71,7 +71,7 @@ export default async function Dashboard() {
       <div className="grid k4" style={{ marginBottom: 18 }}>
         <div className="card kpi">
           <div className="v">{nombre(total)}</div>
-          <div className="l">dossiers au portefeuille</div>
+          <div className="l">dossier{total > 1 ? 's' : ''} au portefeuille</div>
         </div>
         <div className="card kpi">
           <div className="v">{total ? Math.round((perdus / total) * 100) : 0} %</div>
@@ -87,7 +87,7 @@ export default async function Dashboard() {
         {voitMarge ? (
           <div className="card kpi">
             <div className="v">{euros(margeTotale)}</div>
-            <div className="l">marge nette prévisionnelle sur {nombre(dossiers.length)} dossiers vivants</div>
+            <div className="l">marge nette prévisionnelle sur {nombre(dossiers.length)} dossier{dossiers.length > 1 ? 's' : ''} vivant{dossiers.length > 1 ? 's' : ''}</div>
           </div>
         ) : (
           <div className="card kpi">
@@ -110,7 +110,9 @@ export default async function Dashboard() {
                 <span style={{ width: `${total ? (d.n / total) * 100 : 0}%`, background: d.couleur }} />
               </div>
               <div style={{ marginTop: 6, display: 'flex', flexWrap: 'wrap', gap: 5 }}>
-                {d.statuts.filter((s) => s.n > 0).map((s) => (
+                {d.statuts.filter((s) => s.n > 0).map((s) => s.orphelin ? (
+                  <span key={s.statut} className="tag">à classer · {s.n}</span>
+                ) : (
                   <a key={s.statut} href={`/dossiers?statut=${encodeURIComponent(s.statut)}`} className="tag">
                     {s.statut} · {s.n}
                   </a>

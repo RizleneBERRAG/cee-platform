@@ -1,4 +1,5 @@
-import { all } from '../../../lib/db.js'
+import { all, db } from '../../../lib/db.js'
+import { valeursListe } from '../../../lib/listes.js'
 import { garde } from '../../../lib/garde.js'
 import { enregistrerProduit, supprimerProduit } from '../../../lib/actions-operations.js'
 
@@ -74,7 +75,8 @@ export default async function PageCatalogue() {
         <div className="grid k4">
           <div className="field">
             <label>Marque</label>
-            <input name="marque" />
+            <input name="marque" list="liste-marques" />
+            <datalist id="liste-marques">{valeursListe(db(), 'marque').map((x) => <option key={x.id} value={x.libelle} />)}</datalist>
           </div>
           <div className="field">
             <label>Référence</label>

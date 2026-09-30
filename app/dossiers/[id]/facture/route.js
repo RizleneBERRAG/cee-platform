@@ -12,8 +12,9 @@
  * numéro, et ils ne se produisent que si quelqu'un les demande explicitement.
  */
 import { utilisateurConnecte } from '../../../../lib/auth.js'
+import { exigerPortee } from '../../../../lib/garde.js'
 import { db as ouvrir } from '../../../../lib/db.js'
-import { apercuFacture, emettreFacture, emettreAvoir, lireFacture } from '../../../../lib/facture.js'
+import { apercuFacture, emettreFacture, emettreAvoir, lireFacture, preparerAcompte, emettreAcompte } from '../../../../lib/facture.js'
 import { factureHtml } from '../../../../lib/facture-html.js'
 
 export const dynamic = 'force-dynamic'
@@ -39,8 +40,34 @@ export async function GET(request, { params }) {
   if (!u.permissions.includes('dossier.voir')) return texte('Accès refusé.', 403)
 
   const { id } = await params
-  const demandee = new URL(request.url).searchParams.get('facture')
+  // Le droit ne suffit pas : le dossier doit être dans la portée de l'appelant. Même
+  // réponse que pour un dossier inexistant, pour ne pas révéler celui d'une autre unité.
+  try { exigerPortee(u, id) } catch { return texte('Dossier introuvable.', 404) }
+  const url = new URL(request.url)
+  const demandee = url.searchParams.get('facture')
   const db = ouvrir()
+
+  // Aperçu d'un acompte (?acompte&pourcentage=30, ou ?acompte&montant=1500) : filigrané,
+  // sans numéro. Mêmes champs que le formulaire d'émission, qui poste sur ?acompte.
+  if (url.searchParams.has('acompte')) {
+    // Un montant saisi l'emporte sur le pourcentage, pré-rempli par défaut.
+    const montant = url.searchParams.get('montant') || null
+    const pa = preparerAcompte(db, id, {
+      pourcentage: montant ? null : url.searchParams.get('pourcentage') || null,
+      montantTtc: montant,
+    })
+    if (!pa) return texte('Dossier introuvable.', 404)
+    const base = apercuFacture(db, id)?.facture
+    if (!base) return texte("Aucune société émettrice n'est rattachée à ce dossier, ni définie par défaut.", 422)
+    if (!pa.emettable) {
+      return texte(`Acompte impossible :\n${pa.anomalies.filter((a) => a.niveau === 'BLOQUANT').map((a) => `- ${a.message}`).join('\n')}`, 422)
+    }
+    return html(factureHtml({
+      ...base, type: 'ACOMPTE', lignes: pa.lignes, date_prestation: null,
+      total_ht: pa.totauxAcompte.ht, total_tva: pa.totauxAcompte.tva, total_ttc: pa.totauxAcompte.ttc,
+      prime_deduite: null, acomptes_ttc: null, acomptes_detail: null, reste_a_payer: pa.totauxAcompte.ttc,
+    }))
+  }
 
   // Une facture nommée est réimprimée telle quelle — y compris un avoir, y compris une
   // facture annulée : c'est justement quand une pièce a été corrigée qu'on a besoin de
@@ -69,8 +96,23 @@ export async function POST(request, { params }) {
   }
 
   const { id } = await params
-  const avoirDe = new URL(request.url).searchParams.get('avoir')
+  try { exigerPortee(u, id) } catch { return texte('Dossier introuvable.', 404) }
+  const url = new URL(request.url)
+  const avoirDe = url.searchParams.get('avoir')
   const db = ouvrir()
+
+  // Facture d'acompte : pourcentage du net à payer, ou montant TTC.
+  if (url.searchParams.has('acompte')) {
+    const form = await request.formData().catch(() => null)
+    const montant = form?.get('montant') || null
+    const r = emettreAcompte(db, id, {
+      pourcentage: montant ? null : form?.get('pourcentage') || null,
+      montantTtc: montant,
+      utilisateurId: u.id,
+    })
+    if (!r.ok) return texte(`Acompte refusé :\n${r.motifs.map((m) => `- ${m}`).join('\n')}`, 422)
+    return html(factureHtml(lireFacture(db, r.id)))
+  }
 
   if (avoirDe) {
     const source = lireFacture(db, avoirDe)

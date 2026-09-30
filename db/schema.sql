@@ -198,7 +198,10 @@ CREATE TABLE IF NOT EXISTS entite_emettrice (
   delai_paiement_jours INTEGER NOT NULL DEFAULT 30,
 
   par_defaut INTEGER NOT NULL DEFAULT 0,
-  actif INTEGER NOT NULL DEFAULT 1
+  actif INTEGER NOT NULL DEFAULT 1,
+  -- Le compte sur lequel la société se fait payer : ses coordonnées bancaires sont
+  -- imprimées sur les factures et les appels à paiement (liste « compte_bancaire »).
+  compte_bancaire_id TEXT REFERENCES liste_parametrable(id)
 );
 
 -- ── Factures ─────────────────────────────────────────────────
@@ -222,10 +225,22 @@ CREATE TABLE IF NOT EXISTS facture (
   dossier_id TEXT NOT NULL REFERENCES dossier(id),
   entite_id TEXT NOT NULL REFERENCES entite_emettrice(id),
 
-  -- FACTURE | AVOIR. Un avoir porte les mêmes montants, en négatif.
+  -- FACTURE | ACOMPTE | AVOIR. Un avoir porte les mêmes montants, en négatif.
   type TEXT NOT NULL DEFAULT 'FACTURE',
   -- L'avoir désigne la facture qu'il annule ; une facture annulée n'est jamais effacée.
   annule_facture_id TEXT REFERENCES facture(id),
+  -- Sur un ACOMPTE : la facture finale qui l'a déduit. Si cette facture est annulée par un
+  -- avoir, l'acompte redevient disponible pour la suivante — il a bien été payé.
+  imputee_sur_id TEXT REFERENCES facture(id),
+  -- Sur une facture finale : les acomptes déduits, en TTC, et leur liste figée à l'émission
+  -- (« SPL-F-2026-0003 du 01/10/2026 : 1 200,00 € »), pour réimprimer à l'identique.
+  acomptes_ttc REAL,
+  acomptes_detail TEXT,
+  -- Coordonnées bancaires de la société, recopiées à l'émission comme tout le reste : une
+  -- facture réimprimée après un changement de banque doit montrer l'IBAN qu'elle portait.
+  reglement_banque TEXT,
+  reglement_iban TEXT,
+  reglement_bic TEXT,
 
   date_emission TEXT NOT NULL,
   -- Date de la vente ou de la fin des travaux : c'est elle qui fait foi fiscalement,
@@ -394,7 +409,15 @@ CREATE TABLE IF NOT EXISTS beneficiaire (
   prenom TEXT,
   email TEXT,
   telephone TEXT,
-  regime_revenu TEXT NOT NULL DEFAULT 'CLASSIQUE'
+  regime_revenu TEXT NOT NULL DEFAULT 'CLASSIQUE',
+  -- Signataire et siège : ce que l'attestation sur l'honneur et le devis impriment.
+  -- Le siège n'est pas le chantier : une EARL a souvent son siège au domicile de l'exploitant.
+  civilite TEXT,
+  fonction TEXT,
+  telephone_2 TEXT,
+  adresse TEXT,
+  code_postal TEXT,
+  ville TEXT
 );
 
 CREATE TABLE IF NOT EXISTS site (
@@ -546,7 +569,18 @@ CREATE TABLE IF NOT EXISTS dossier (
   reseau_nom TEXT,
   reseau_exploitant TEXT,
 
-  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  -- Corbeille. Supprimer un dossier le retire de toutes les listes, de tous les totaux et
+  -- ferme l'accès de son client — sans rien effacer : il se récupère tel quel. Seule la
+  -- suppression définitive, depuis la corbeille, efface pour de bon.
+  supprime_le TEXT,
+  supprime_par TEXT REFERENCES utilisateur(id),
+  motif_suppression TEXT,
+  -- MaPrimeRénov' parcours accompagné : l'AMO / MAR, sa prestation, et le mandataire Anah.
+  amo_id TEXT REFERENCES liste_parametrable(id),
+  amo_montant REAL,
+  amo_nature TEXT,
+  mandataire_anah_id TEXT REFERENCES liste_parametrable(id)
 );
 
 -- ── Conformité documentaire ──────────────────────────────────
@@ -918,3 +952,181 @@ CREATE TABLE IF NOT EXISTS reponse_qualification (
   UNIQUE (dossier_id, fiche_code, cle)
 );
 CREATE INDEX IF NOT EXISTS idx_reponse_qualif ON reponse_qualification(dossier_id);
+
+-- ── Rappels ──────────────────────────────────────────────────
+--
+-- Ce que l'équipe ouvre le matin : qui rappeler aujourd'hui, et qui aurait dû l'être hier.
+-- Une note raconte ce qui s'est passé ; un rappel engage quelqu'un à faire quelque chose
+-- à une date. Les deux se rejoignent à la clôture : le compte rendu devient une note du
+-- dossier, pour que l'historique reste au même endroit.
+--
+-- `date_rappel` est l'heure locale saisie (« 2026-10-01T09:30 »), sans fuseau : c'est
+-- l'heure du bureau, pas un instant absolu.
+CREATE TABLE IF NOT EXISTS rappel (
+  id TEXT PRIMARY KEY,
+  dossier_id TEXT NOT NULL REFERENCES dossier(id) ON DELETE CASCADE,
+  date_rappel TEXT NOT NULL,
+  motif TEXT NOT NULL,
+  commentaire TEXT,
+  attribue_a TEXT REFERENCES utilisateur(id),
+  cree_par TEXT REFERENCES utilisateur(id),
+  cree_le TEXT NOT NULL DEFAULT (datetime('now')),
+  fait_le TEXT,
+  fait_par TEXT REFERENCES utilisateur(id),
+  compte_rendu TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_rappel_date ON rappel(fait_le, date_rappel);
+CREATE INDEX IF NOT EXISTS idx_rappel_dossier ON rappel(dossier_id);
+
+-- ── Planning ─────────────────────────────────────────────────
+--
+-- Les types d'intervention sont les calendriers du planning : rendez-vous commercial,
+-- prévisite, pose… En données, pas en code : chaque société a les siens, et un type retiré
+-- se désactive — les interventions passées restent lisibles.
+CREATE TABLE IF NOT EXISTS type_intervention (
+  id TEXT PRIMARY KEY,
+  code TEXT NOT NULL UNIQUE,
+  libelle TEXT NOT NULL,
+  couleur TEXT NOT NULL DEFAULT '#64748b',
+  description TEXT,
+  ordre INTEGER NOT NULL DEFAULT 0,
+  actif INTEGER NOT NULL DEFAULT 1
+);
+
+-- Une intervention : qui va où, quand, pour quel dossier.
+--
+-- `debut` et `fin` sont des heures locales saisies (« 2026-10-01T08:30 »), sans fuseau :
+-- c'est l'heure du chantier. `debut` NULL = à planifier — l'intervention existe, personne
+-- ne sait encore quand. Le statut dit où en est le rendez-vous ; une intervention réalisée
+-- ou annulée ne se déplace plus : c'est de l'historique.
+CREATE TABLE IF NOT EXISTS intervention (
+  id TEXT PRIMARY KEY,
+  dossier_id TEXT NOT NULL REFERENCES dossier(id) ON DELETE CASCADE,
+  type_id TEXT NOT NULL REFERENCES type_intervention(id),
+  debut TEXT,
+  fin TEXT,
+  attribuee_a TEXT REFERENCES utilisateur(id),
+  statut TEXT NOT NULL DEFAULT 'A_PLANIFIER',
+  commentaire TEXT,
+  confirmee_par TEXT REFERENCES utilisateur(id),
+  confirmee_le TEXT,
+  realisee_le TEXT,
+  compte_rendu TEXT,
+  cree_par TEXT REFERENCES utilisateur(id),
+  cree_le TEXT NOT NULL DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS idx_intervention_debut ON intervention(debut);
+CREATE INDEX IF NOT EXISTS idx_intervention_dossier ON intervention(dossier_id);
+CREATE INDEX IF NOT EXISTS idx_intervention_attribuee ON intervention(attribuee_a);
+
+-- ── Appels à paiement ────────────────────────────────────────
+--
+-- Après le dépôt, le délégataire valide les volumes et adresse un appel à facturation (AAF) ;
+-- on lui facture alors les primes, puis on attend le virement. L'appel à paiement suit ce
+-- trajet : EN_CREATION → VALIDE → PAIEMENT_ATTENDU (facture émise) → PAYE.
+--
+-- `numero` est interne (AAP-2026-001). `numero_facture` est celui de la facture adressée au
+-- délégataire : pris dans la série des factures de la société à l'émission, ou saisi s'il a
+-- été émis par un autre logiciel. Les totaux sont figés à l'émission, comme sur une facture.
+CREATE TABLE IF NOT EXISTS appel_paiement (
+  id TEXT PRIMARY KEY,
+  numero TEXT NOT NULL UNIQUE,
+  delegataire_id TEXT NOT NULL REFERENCES delegataire(id),
+  entite_id TEXT REFERENCES entite_emettrice(id),
+  lot_id TEXT REFERENCES lot(id),
+  statut TEXT NOT NULL DEFAULT 'EN_CREATION',
+  num_aaf TEXT,
+  date_aaf TEXT,
+  numero_facture TEXT UNIQUE,
+  date_facture TEXT,
+  taux_tva REAL NOT NULL DEFAULT 20,
+  total_cumac REAL,
+  total_ht REAL,
+  total_tva REAL,
+  total_ttc REAL,
+  date_paiement TEXT,
+  montant_recu REAL,
+  commentaire TEXT,
+  reglement_banque TEXT,
+  reglement_iban TEXT,
+  reglement_bic TEXT,
+  cree_par TEXT REFERENCES utilisateur(id),
+  cree_le TEXT NOT NULL DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS idx_aap_statut ON appel_paiement(statut);
+
+-- Une ligne par dossier. `cumac_depose` et `prime_attendue` sont recopiés du dossier figé à
+-- l'ajout ; `cumac_valide` et `prime_ht` sont ce que le délégataire valide et paie. L'écart
+-- entre les deux est le chiffre à surveiller : un volume rogné sans le dire est une marge
+-- perdue sans le savoir. Un dossier n'appartient qu'à un seul appel.
+CREATE TABLE IF NOT EXISTS appel_paiement_ligne (
+  id TEXT PRIMARY KEY,
+  appel_id TEXT NOT NULL REFERENCES appel_paiement(id) ON DELETE CASCADE,
+  dossier_id TEXT NOT NULL UNIQUE REFERENCES dossier(id),
+  cumac_depose REAL,
+  prime_attendue REAL,
+  cumac_valide REAL,
+  prime_ht REAL
+);
+CREATE INDEX IF NOT EXISTS idx_aap_ligne_appel ON appel_paiement_ligne(appel_id);
+
+-- ── S.A.V ────────────────────────────────────────────────────
+--
+-- Chez Pixel comme dans le métier, un S.A.V n'est pas seulement une panne après pose : c'est
+-- tout incident qui rouvre un dossier — contrôle COFRAC ou PNCEE, refus ou arbitrage de
+-- l'organisme, pièce incohérente, reliquat de travaux. Types, statuts et motifs sont des
+-- listes paramétrables, rangées dans une seule table par catégorie.
+CREATE TABLE IF NOT EXISTS sav_referentiel (
+  id TEXT PRIMARY KEY,
+  categorie TEXT NOT NULL,            -- TYPE | STATUT | MOTIF
+  libelle TEXT NOT NULL,
+  description TEXT,
+  ordre INTEGER NOT NULL DEFAULT 0,
+  actif INTEGER NOT NULL DEFAULT 1,
+  -- Sur un STATUT : le choisir clôt le S.A.V (« Réglé »).
+  cloture INTEGER NOT NULL DEFAULT 0
+);
+CREATE INDEX IF NOT EXISTS idx_sav_referentiel ON sav_referentiel(categorie, ordre);
+
+CREATE TABLE IF NOT EXISTS sav (
+  id TEXT PRIMARY KEY,
+  numero TEXT NOT NULL UNIQUE,
+  dossier_id TEXT NOT NULL REFERENCES dossier(id) ON DELETE CASCADE,
+  type_id TEXT REFERENCES sav_referentiel(id),
+  motif_id TEXT REFERENCES sav_referentiel(id),
+  statut_id TEXT REFERENCES sav_referentiel(id),
+  attribue_a TEXT REFERENCES utilisateur(id),
+  probleme TEXT,
+  observation TEXT,
+  -- La date d'intervention vient de l'intervention S.A.V du planning quand elle existe.
+  intervention_id TEXT REFERENCES intervention(id),
+  date_intervention TEXT,
+  ouvert_le TEXT NOT NULL DEFAULT (date('now')),
+  regle_le TEXT,
+  cloture INTEGER NOT NULL DEFAULT 0,
+  cree_par TEXT REFERENCES utilisateur(id),
+  cree_le TEXT NOT NULL DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS idx_sav_dossier ON sav(dossier_id);
+CREATE INDEX IF NOT EXISTS idx_sav_statut ON sav(statut_id, cloture);
+
+-- ── Listes paramétrables ─────────────────────────────────────
+--
+-- Les référentiels « simples » de Pixel — AMO, mandataires Anah, gestionnaires de réseau,
+-- sources de lead, comptes bancaires, marques… — dans une seule table. Chaque liste est
+-- décrite dans lib/listes.js (ses champs, leurs contrôles, là où elle sert) : ajouter une
+-- liste, c'est ajouter une définition, pas une table ni un écran.
+--
+-- `donnees` porte en JSON les champs propres à la liste (SIRET, IBAN, taux…). Rien ne se
+-- supprime : une valeur retirée se désactive, et reste lisible là où elle a servi.
+CREATE TABLE IF NOT EXISTS liste_parametrable (
+  id TEXT PRIMARY KEY,
+  liste TEXT NOT NULL,
+  libelle TEXT NOT NULL,
+  donnees TEXT NOT NULL DEFAULT '{}',
+  ordre INTEGER NOT NULL DEFAULT 0,
+  par_defaut INTEGER NOT NULL DEFAULT 0,
+  actif INTEGER NOT NULL DEFAULT 1,
+  cree_le TEXT NOT NULL DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS idx_liste_parametrable ON liste_parametrable(liste, actif, ordre);

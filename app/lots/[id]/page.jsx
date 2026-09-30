@@ -3,12 +3,31 @@ import { completude } from '../../../lib/documents.js'
 import { affecterAuLot, retirerDuLot, deposerLot } from '../../../lib/actions.js'
 import { euros, nombre } from '../../../lib/marge.js'
 import { garde, a } from '../../../lib/garde.js'
+import { statutsParAxe } from '../../../lib/queries.js'
+import { statuerLotAction } from '../../../lib/actions-lots.js'
+import { creerAppelAction } from '../../../lib/actions-aap.js'
+import { db } from '../../../lib/db.js'
+import { delegataireDuLot, STATUTS_AAP } from '../../../lib/aap.js'
+
+const ETATS = {
+  EN_CONSTITUTION: ['En constitution', 'var(--warn)'],
+  DEPOSE: ['Déposé', 'var(--accent)'],
+  INSTRUIT: ['En instruction', '#8b5cf6'],
+  VALIDE: ['Validé', 'var(--ok)'],
+  REJETE: ['Rejeté', 'var(--danger)'],
+}
+const AXES = [
+  ['statut_dossier_id', 'DOSSIER', 'Statut dossier'],
+  ['statut_admin_id', 'ADMIN', 'Statut administratif'],
+  ['statut_facturation_id', 'FACTURATION', 'Facturation'],
+]
 
 export const dynamic = 'force-dynamic'
 
-export default async function FicheLot({ params }) {
+export default async function FicheLot({ params, searchParams }) {
   const { u } = await garde('lot.gerer')
   const { id } = await params
+  const sp = await searchParams
   const l = lot(id)
   if (!l) return <p>Lot introuvable.</p>
 
@@ -20,6 +39,12 @@ export default async function FicheLot({ params }) {
   const bloquants = analyses.filter((a) => !a.calc.eligibilite.applicable || (!a.comp.sansLiasse && !a.comp.deposable))
   const cumac = dedans.reduce((s, d) => s + (d.volume_cumac || 0), 0)
   const ca = dedans.reduce((s, d) => s + (d.prime_delegataire || 0), 0)
+  const [etatLibelle, etatCouleur] = ETATS[l.statut] || [l.statut, '#64748b']
+  const voitMontants = a(u, 'marge.voir')
+  const appels = voitMontants ? db().prepare(`SELECT DISTINCT a.id, a.numero, a.statut FROM appel_paiement a
+    LEFT JOIN appel_paiement_ligne x ON x.appel_id = a.id LEFT JOIN dossier d ON d.id = x.dossier_id
+    WHERE a.lot_id = ? OR d.lot_id = ? ORDER BY a.numero`).all(id, id) : []
+  const delegataireConnu = !!delegataireDuLot(db(), id)
 
   return (
     <>
@@ -27,13 +52,17 @@ export default async function FicheLot({ params }) {
         <div>
           <h1 style={{ marginBottom: 6 }}>
             {l.numero}{' '}
-            <span key={l.statut} className="pill" style={{ background: ouvert ? 'var(--warn)' : 'var(--accent)', verticalAlign: 'middle' }}>
-              {ouvert ? 'En constitution' : 'Déposé'}
+            <span key={l.statut} className="pill" style={{ background: etatCouleur, verticalAlign: 'middle' }}>
+              {etatLibelle}
             </span>
           </h1>
           <p className="lede" style={{ marginBottom: 0 }}>
             {l.organisme || 'Organisme non défini'}
             {l.date_depot ? ` · déposé le ${new Date(l.date_depot).toLocaleDateString('fr-FR')}` : ''}
+            {l.reference_emmy ? ` · EMMY ${l.reference_emmy}` : ''}
+            {appels.map((x) => (
+              <span key={x.id}> · <a href={`/aap/${x.id}`} style={{ color: 'var(--accent)' }}>{x.numero}</a> ({STATUTS_AAP[x.statut]?.libelle.toLowerCase()})</span>
+            ))}
           </p>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
@@ -63,6 +92,7 @@ export default async function FicheLot({ params }) {
         </div>
       </div>
 
+      {sp?.m && <div className="alert ok" style={{ marginTop: 14 }}><b>Lot</b>{sp.m}</div>}
       {bloquants.length > 0 && (
         <div className="alert danger" style={{ marginTop: 14 }}>
           <b>{bloquants.length} dossier(s) bloquent le dépôt</b>
@@ -167,6 +197,50 @@ export default async function FicheLot({ params }) {
               <button className="btn primary" style={{ marginTop: 12 }}>Ajouter au lot</button>
             </>
           )}
+        </form>
+      )}
+
+      {!ouvert && dedans.length > 0 && (
+        <form action={statuerLotAction} className="card" style={{ marginTop: 14 }}>
+          <input type="hidden" name="lot_id" value={l.id} />
+          <h2>Statuer le lot et ses {dedans.length} dossiers</h2>
+          <p className="muted" style={{ fontSize: 12.5, marginTop: -6 }}>
+            Au retour du délégataire : l'état du lot, sa référence EMMY, et le statut de tous ses
+            dossiers d'un coup. Chaque dossier garde sa ligne au journal ; un axe laissé sur « — »
+            n'est pas modifié.
+          </p>
+          <div className="grid k4">
+            <div className="field"><label>État du lot</label>
+              <select name="etat" defaultValue={l.statut}>
+                {['DEPOSE', 'INSTRUIT', 'VALIDE', 'REJETE'].map((k) => <option key={k} value={k}>{ETATS[k][0]}</option>)}
+              </select></div>
+            <div className="field"><label>Référence EMMY</label><input name="reference_emmy" defaultValue={l.reference_emmy || ''} /></div>
+          </div>
+          <div className="grid k3">
+            {AXES.map(([champ, axe, label]) => (
+              <div className="field" key={champ}><label>{label} des dossiers</label>
+                <select name={champ} defaultValue="">
+                  <option value="">—</option>
+                  {statutsParAxe(axe).map((s) => <option key={s.id} value={s.id}>{s.etape ? `${s.etape} · ` : ''}{s.libelle}</option>)}
+                </select></div>
+            ))}
+          </div>
+          <button className="btn primary">Appliquer</button>
+        </form>
+      )}
+
+      {!ouvert && voitMontants && dedans.length > 0 && (
+        <form action={creerAppelAction} className="card" style={{ marginTop: 14, display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+          <input type="hidden" name="lot_id" value={l.id} />
+          <div style={{ flex: 1, minWidth: 260 }}>
+            <h2 style={{ margin: 0 }}>Appel à paiement</h2>
+            <p className="muted" style={{ fontSize: 12.5, margin: '4px 0 0' }}>
+              {delegataireConnu
+                ? "Crée un appel avec les dossiers valorisés de ce lot qui ne sont dans aucun autre appel. Vous y reporterez ce que le délégataire a validé."
+                : `Le délégataire de ce lot n'est pas identifié (organisme « ${l.organisme || '—'} » absent des délégataires) : créez l'appel depuis l'écran des appels à paiement.`}
+            </p>
+          </div>
+          <button className="btn primary" disabled={!delegataireConnu}>Créer l'appel à paiement</button>
         </form>
       )}
 

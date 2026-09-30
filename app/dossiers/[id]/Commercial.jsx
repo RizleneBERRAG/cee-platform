@@ -1,4 +1,5 @@
-import { all } from '../../../lib/db.js'
+import { all, db } from '../../../lib/db.js'
+import { valeursListe } from '../../../lib/listes.js'
 import { majCommercial, ajouterIntervenant, retirerIntervenant } from '../../../lib/actions-commercial.js'
 import {
   ROLES_INTERVENANT, TYPES_LEAD, ETATS_DEVIS,
@@ -63,7 +64,9 @@ export default function Commercial({ dossierId, d, modifiable }) {
           </div>
           <div className="field">
             <label>Source du lead</label>
-            <input key={`sl-${d.source_lead}`} name="source_lead" defaultValue={d.source_lead || ''} disabled={!modifiable} />
+            {/* Suggestions tirées du paramétrage ; une source saisie librement reste acceptée. */}
+            <input key={`sl-${d.source_lead}`} name="source_lead" list="liste-source-lead" defaultValue={d.source_lead || ''} disabled={!modifiable} />
+            <datalist id="liste-source-lead">{valeursListe(db(), 'source_lead').map((x) => <option key={x.id} value={x.libelle} />)}</datalist>
           </div>
           <div className="field">
             <label>Campagne</label>

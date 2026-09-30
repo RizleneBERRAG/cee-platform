@@ -101,6 +101,10 @@ a:hover { text-decoration: none; }
 }
 .side nav a:hover { background: var(--side-2); color: #fff; }
 .side nav a.on { background: var(--side-2); color: #fff; border-left-color: var(--accent); font-weight: 600; }
+.badge-nav {
+  display: inline-block; margin-left: 8px; min-width: 18px; padding: 0 6px; border-radius: 9px;
+  background: var(--danger); color: #fff; font-size: 11px; font-weight: 700; line-height: 18px; text-align: center;
+}
 
 .side .compte { margin-top: auto; padding: 14px 18px 0; border-top: 1px solid rgba(255,255,255,.09); }
 .compte-nom { display: block; font-size: 12.5px; font-weight: 600; color: #fff; padding: 4px 0; }
@@ -346,4 +350,109 @@ details.avance[open] > summary { border-bottom: 1px solid var(--border); }
   /* Le titre et le compte de résultats doivent figurer sur le papier. */
   .main > h1 { font-size: 14pt; margin-bottom: 8pt; }
   .compte-resultat { font-size: 9pt; margin-bottom: 6pt; }
+}
+
+/* ── Onglets de la fiche dossier ─────────────────────────────── */
+.onglets {
+  display: flex; flex-wrap: wrap; gap: 2px; margin: 16px 0 14px;
+  border-bottom: 1px solid var(--border);
+}
+.onglets button {
+  background: none; border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px;
+  padding: 9px 13px; font: inherit; font-size: 13px; color: var(--muted); cursor: pointer;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.onglets button:hover { color: var(--text); }
+.onglets button.on { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+.onglets .compte {
+  min-width: 18px; padding: 0 5px; border-radius: 9px; line-height: 17px; font-size: 11px;
+  font-weight: 700; text-align: center; background: var(--border); color: var(--text-2);
+}
+.onglets .compte.danger { background: var(--danger); color: #fff; }
+.onglets .compte.warn { background: var(--warn); color: #fff; }
+.panneau > :first-child, .panneau > :first-child > :first-child { margin-top: 0 !important; }
+.panneau[hidden] { display: none; }
+.sous-titre {
+  font-size: 11.5px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em;
+  color: var(--muted); margin: 6px 0 8px;
+}
+@media print {
+  .onglets { display: none; }
+  .panneau[hidden] { display: block !important; }
+}
+
+/* ── Planning ────────────────────────────────────────────────── */
+.pl-corps { display: flex; gap: 14px; align-items: flex-start; }
+.pl-defile { flex: 1; min-width: 0; overflow-x: auto; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
+.pl-grille { font-size: 12px; }
+.pl-rangee { display: grid; border-bottom: 1px solid var(--border); position: relative; }
+.pl-entete { position: sticky; top: 0; z-index: 3; background: var(--surface-2); }
+.pl-nom {
+  grid-column: 1; padding: 6px 10px; border-right: 1px solid var(--border); background: var(--surface);
+  display: flex; justify-content: space-between; align-items: center; gap: 6px; font-weight: 500;
+  position: sticky; left: 0; z-index: 2;
+}
+.pl-entete .pl-nom { background: var(--surface-2); font-weight: 400; color: var(--muted); }
+.pl-nom small { color: var(--muted); font-weight: 400; }
+.pl-aucun .pl-nom { color: var(--text-2); }
+.pl-role {
+  padding: 5px 10px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em;
+  color: var(--muted); background: var(--surface-2); border-bottom: 1px solid var(--border);
+}
+.pl-jour { padding: 6px 4px; text-align: center; border-right: 1px solid var(--border); color: var(--text-2); display: flex; flex-direction: column; line-height: 1.25; }
+.pl-jour span { font-size: 11px; color: var(--muted); }
+.pl-case { border-right: 1px solid var(--border); min-height: 30px; }
+.pl-jour.we, .pl-case.we { background: #f6f7f9; }
+.pl-jour.auj { color: var(--accent); }
+.pl-case.auj { background: var(--accent-clair); }
+.pl-case.cible { background: #dbe6ff; outline: 2px dashed var(--accent); outline-offset: -2px; }
+.pl-evt {
+  z-index: 1; margin: 3px; padding: 3px 6px; border: 0; border-radius: 5px; text-align: left; cursor: pointer;
+  background: color-mix(in srgb, var(--c) 14%, white); border-left: 4px solid var(--c); color: var(--text);
+  font: inherit; font-size: 11.5px; overflow: hidden; display: flex; flex-direction: column; min-width: 0;
+}
+.pl-evt[draggable="true"] { cursor: grab; }
+.pl-evt:hover, .pl-evt.choisie { box-shadow: 0 0 0 2px var(--c); }
+.pl-evt-l1, .pl-evt-l2 { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pl-evt-l2 { color: var(--text-2); font-size: 11px; }
+.pl-evt.st-CONFIRMEE { background: color-mix(in srgb, var(--c) 30%, white); }
+.pl-evt.st-REALISEE { opacity: .55; }
+.pl-evt.st-REALISEE .pl-evt-l1 { text-decoration: line-through; }
+.pl-evt.st-A_PLANIFIER, .pl-evt.st-PLANIFIEE { border-style: solid; }
+.pl-attente { width: 240px; flex-shrink: 0; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; position: sticky; top: 12px; max-height: calc(100vh - 24px); overflow-y: auto; }
+.pl-attente h2 { margin-top: 0; }
+.pl-carte {
+  display: flex; flex-direction: column; gap: 1px; width: 100%; text-align: left; margin-bottom: 6px; padding: 7px 9px;
+  border: 1px solid var(--border); border-left: 4px solid var(--c); border-radius: 6px; background: var(--surface);
+  font: inherit; font-size: 12px; cursor: grab;
+}
+.pl-carte.choisie, .pl-carte:hover { box-shadow: 0 0 0 2px var(--c); }
+.pl-detail { margin-top: 14px; }
+.pl-corps.mois { flex-direction: column-reverse; align-items: stretch; }
+.pl-corps.mois .pl-defile { width: 100%; }
+.pl-corps.mois .pl-attente { width: auto; position: static; max-height: none; display: flex; flex-wrap: wrap; gap: 6px; align-items: flex-start; }
+.pl-corps.mois .pl-attente h2 { width: 100%; margin-bottom: 4px; }
+.pl-corps.mois .pl-carte { width: 230px; margin-bottom: 0; }
+.pl-corps.mois .pl-attente > p { width: 100%; margin: 0; }
+@media (max-width: 900px) {
+  /* En colonne, la grille doit prendre la largeur de l'écran et défiler dans son cadre —
+     sans « stretch », elle prenait celle de son contenu et faisait déborder toute la page. */
+  .pl-corps { flex-direction: column; align-items: stretch; }
+  .pl-defile { width: 100%; }
+  .pl-attente { width: auto; position: static; max-height: none; }
+}
+
+/* ── Corbeille : menu de la fiche dossier ────────────────────── */
+.corbeille-menu { position: relative; }
+.corbeille-menu > summary { list-style: none; cursor: pointer; }
+.corbeille-menu > summary::-webkit-details-marker { display: none; }
+.corbeille-pop {
+  position: absolute; right: 0; top: calc(100% + 6px); z-index: 20; width: 320px;
+  display: flex; flex-direction: column; gap: 8px; padding: 12px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, .12); font-size: 12.5px;
+}
+
+@media (max-width: 760px) {
+  .listes-grille { grid-template-columns: 1fr !important; }
 }

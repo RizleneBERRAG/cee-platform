@@ -12,6 +12,7 @@
 import { DatabaseSync } from 'node:sqlite'
 import path from 'node:path'
 import { utilisateurConnecte } from '../../../../lib/auth.js'
+import { exigerPortee } from '../../../../lib/garde.js'
 import { donneesDevis, attribuerNumero } from '../../../../lib/devis.js'
 import { devisHtml } from '../../../../lib/devis-html.js'
 
@@ -29,6 +30,9 @@ export async function GET(request, { params }) {
   }
 
   const { id } = await params
+  // Le droit ne suffit pas : le dossier doit être dans la portée de l'appelant. Même
+  // réponse que pour un dossier inexistant, pour ne pas révéler celui d'une autre unité.
+  try { exigerPortee(u, id) } catch { return new Response('Dossier introuvable.', { status: 404 }) }
   const db = ouvrir()
   const donnees = donneesDevis(db, id)
   if (!donnees) return new Response('Dossier introuvable.', { status: 404 })
@@ -49,6 +53,9 @@ export async function POST(request, { params }) {
   }
 
   const { id } = await params
+  // Le droit ne suffit pas : le dossier doit être dans la portée de l'appelant. Même
+  // réponse que pour un dossier inexistant, pour ne pas révéler celui d'une autre unité.
+  try { exigerPortee(u, id) } catch { return new Response('Dossier introuvable.', { status: 404 }) }
   const db = ouvrir()
   const donnees = donneesDevis(db, id)
   if (!donnees) return new Response('Dossier introuvable.', { status: 404 })
