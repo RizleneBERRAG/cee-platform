@@ -1,7 +1,9 @@
-# Plateforme CEE — tranche verticale
+# Plateforme CEE
 
-Prototype fonctionnel d'une plateforme de gestion des dossiers CEE, conçu pour couvrir
-de bout en bout ce que Pixel CRM et crm-energie.fr ne font ni l'un ni l'autre :
+Plateforme de gestion des dossiers CEE. Elle reprend le périmètre de travail de Pixel CRM —
+fiche dossier en onglets, rappels, planning, S.A.V, lots de dépôt, appels à paiement,
+corbeille, paramétrage — et couvre ce que Pixel CRM et crm-energie.fr ne font ni l'un ni
+l'autre :
 
 1. **un référentiel de fiches versionné et daté** — un dossier est rattaché à la version
    en vigueur à sa date d'engagement, jamais à « la » fiche. Une suppression par arrêté
@@ -16,7 +18,14 @@ de bout en bout ce que Pixel CRM et crm-energie.fr ne font ni l'un ni l'autre :
    par unité d'affaire et par fiche ;
 5. **un journal de modification au niveau du champ**, attribué à la personne connectée ;
 6. **un cloisonnement par rôle** qui permet d'ouvrir l'outil à une régie ou à un apporteur
-   sans leur ouvrir la grille de marge.
+   sans leur ouvrir la grille de marge ;
+7. **les écarts rendus visibles** — volume validé par le délégataire contre volume déposé,
+   virement reçu contre facture émise : une marge perdue sans le savoir se voit avant le bilan.
+
+Le guide d'utilisation (`public/aide.html`, entrée « Guide d'utilisation » du menu) décrit
+chaque écran pour l'équipe. Les notes de travail internes — relevé de Pixel, point d'avancement,
+ce qui est attendu du client — vivent dans `docs/`, volontairement hors du dépôt (voir
+`.gitignore`) : elles contiennent la grille de ratios et des données d'entreprise.
 
 ## Démarrer
 
@@ -58,14 +67,21 @@ existantes au démarrage suivant. `npm run seed` reste réservé à ce qu'il fai
 | Route | Contenu |
 |---|---|
 | `/` | Tableau de bord : pipeline, radar de conformité, alertes réglementaires, marge prévisionnelle |
-| `/dossiers` | **Recherche à 45 critères**, colonnes au choix, tri, export CSV, impression |
+| `/dossiers` | **Recherche à 56 critères**, colonnes au choix, tri, export CSV, impression |
 | `/dossiers/export` | Export CSV du résultat de recherche, colonnes et portée respectées |
 | `/dossiers/nouveau` | Création d'un dossier — bénéficiaire, site, opération, deal |
 | `/dossiers/import` | Import de masse depuis un export CRM, en simulation puis pour de bon |
 | `/dossiers/import/[id]` | Rapport d'import : suppositions faites, lignes rejetées groupées par cause |
-| `/dossiers/[id]` | Fiche dossier : calcul, valorisation, modification, journal, notes, verrouillage |
+| `/dossiers/[id]` | Fiche dossier en onze onglets (synthèse, bénéficiaire, chantier, opérations, commercial, technique, administratif, contrôle, pièces, suivi, espace client) ; `?onglet=` ouvre l'un d'eux |
+| `/dossiers/[id]/devis` · `/facture` | Devis et facture imprimables ; en POST, émission (numéro), acompte (`?acompte`) et avoir (`?avoir=`) |
 | `/lots` | Lots de dépôt : constitution, contrôle de blocage, dépôt |
-| `/lots/[id]` | Contenu d'un lot, ajout de dossiers prêts, verrouillage au dépôt |
+| `/lots/[id]` | Contenu d'un lot, ajout de dossiers prêts, verrouillage au dépôt, état et statuts en masse au retour du délégataire, création de l'appel à paiement |
+| `/aap` · `/aap/[id]` | Appels à paiement : AAF, volumes validés, écarts, facture au délégataire, paiement reçu |
+| `/aap/[id]/facture` | Facture au délégataire, imprimable |
+| `/rappels` | Rappels en retard, du jour, à venir, faits |
+| `/planning` | Planning des interventions : sept calendriers, une ligne par intervenant, glisser-déposer |
+| `/sav` · `/sav/[id]` · `/sav/export` | S.A.V : liste par statut, fiche, export CSV |
+| `/corbeille` | Dossiers supprimés : récupérer, supprimer définitivement |
 | `/simulateur` | Simulateur de marge avant engagement |
 | `/referentiel` | Fiches, versions, validité, arrêtés, et lecture des coefficients |
 | `/referentiel/import` | Import CSV du catalogue des fiches (additif, jamais destructif) |
@@ -75,10 +91,14 @@ existantes au démarrage suivant. `npm run seed` reste réservé à ce qu'il fai
 | `/utilisateurs` | Comptes, rôles et droits (réservé au gérant) |
 | `/piece/[id]` | Téléchargement ou aperçu d'une pièce, droits et portée revérifiés |
 | `/parametrage/delegataires` | Délégataires et leur obligé |
-| `/parametrage/deals` | Deals et leurs 12 ratios, avec versionnement |
+| `/parametrage/deals` | Deals, leurs 18 ratios et leur mode de reversement, avec versionnement |
 | `/parametrage/rge` | Installateurs et certifications RGE datées |
 | `/parametrage/pieces` | Types de pièces et composition des liasses |
-| `/parametrage/workflow` | Étapes, statuts sur cinq axes, unités d'affaire |
+| `/parametrage/workflow` | Étapes, statuts sur cinq axes, unités d'affaire (les régies) |
+| `/parametrage/controle` · `/catalogue` | Bureaux de contrôle et leur accréditation ; catalogue produits |
+| `/parametrage/societes` | Sociétés émettrices : identité, assurance, séries de numéros, compte bancaire, logo, blocages d'émission |
+| `/parametrage/listes` | Quatorze listes (AMO / MAR, mandataires Anah, comptes bancaires…) décrites dans `lib/listes.js` |
+| `/parametrage/interventions` · `/sav` | Types d'intervention du planning ; types, statuts et motifs du S.A.V |
 
 ### Les pièces jointes
 
@@ -151,6 +171,11 @@ portent tout l'enjeu :
 |---|---|
 | **Voir les montants et la marge** | Sans lui, aucun montant n'est envoyé au navigateur. C'est ce qui permet de donner un accès à un apporteur sans qu'il découvre ce que vous gagnez sur ses dossiers. |
 | **Voir les dossiers de toutes les unités** | Sans lui, l'utilisateur ne voit que son unité d'affaire. Le cloisonnement est appliqué par le SQL, pas par l'affichage. |
+| **Planning de toute l'équipe** (`planning.tous`) | Sans lui, on ne voit et ne déplace que ses propres interventions. |
+| **Supprimer un dossier** (`dossier.supprimer`) | La corbeille et la suppression définitive. Un dossier à la corbeille est refusé par `exigerPortee` à toute action, sauf celles de la corbeille. |
+
+Ces deux derniers droits sont arrivés par des étapes de migration nommées
+(`lib/migrations-manuelles.js`), données aux rôles qui voient déjà tous les dossiers.
 
 > Masquer un bouton n'est pas une protection. Chaque action serveur refait le contrôle de
 > droit et de portée de son côté : le fichier `secu.mjs` le vérifie en rejouant les requêtes
@@ -160,10 +185,10 @@ portent tout l'enjeu :
 
 C'est l'écran où l'ADV passe sa journée, donc celui qui décide si l'outil est adopté ou subi.
 
-- **45 critères**, regroupés par section : identification, bénéficiaire, site et données
+- **56 critères**, regroupés par section : identification, bénéficiaire, site et données
   réglementaires, opération, chaîne CEE, statuts et jalons. Plus un champ de recherche libre
   qui balaie n° de dossier, référence externe, bénéficiaire, SIRET, ville et code de fiche.
-- **Colonnes au choix** parmi 28, tri sur chacune, 25 à 200 lignes par page.
+- **Colonnes au choix** parmi 29, tri sur chacune, 25 à 200 lignes par page.
 - **Les filtres actifs s'affichent en pastilles** qu'on retire une par une, sans rouvrir le
   panneau. Après une recherche on veut voir le résultat, pas le formulaire.
 - **Les totaux portent sur tout le résultat**, pas sur la page affichée.
@@ -224,6 +249,14 @@ avec les numéros de ligne et trois exemples — on corrige la cause, pas les li
    sans manipulation). Une ligne par dossier, avec bénéficiaire, site, fiche et version,
    volume cumac, montants figés et taux de complétude.
 7. **Verrouillage** — fige le dossier en lecture seule ; le déverrouillage est journalisé.
+8. **Retour du délégataire** — sur la fiche du lot : état (instruit, validé, rejeté),
+   référence EMMY, et statut de tous ses dossiers en un geste, journalisé dossier par dossier
+   (`lib/statuts-masse.js`).
+9. **Appel à paiement** — volumes et primes réellement validés, saisis contre le déposé ;
+   facture au délégataire numérotée dans la série de la société ; virement contrôlé au centime.
+
+À tout moment : **rappels** et **interventions** au planning depuis l'onglet Suivi ;
+**S.A.V** quand un incident rouvre le dossier ; **corbeille** pour un doublon ou un essai.
 
 ## Architecture
 
@@ -244,28 +277,38 @@ middleware.js premier filtre : renvoie vers /connexion sans cookie de session
 lib/recherche.js  catalogue des critères et colonnes, construction de la requête
 lib/import-dossiers.js  moteur d'import de masse (parsing, validation, rapport)
 lib/export.js  export CSV d'un lot de dépôt
+lib/facture.js     factures, acomptes, avoirs : numérotation sans trou, lignes recopiées
+lib/rappels.js · planning.js · sav.js · aap.js · corbeille.js · listes.js · societes.js
+                   un module par fonction, qui reçoit la base en paramètre : chacun se
+                   teste sur une base jetable ; les actions serveur (lib/actions-*.js)
+                   y ajoutent le contrôle de droit et de portée
+lib/portee.js      exigerPortee : unité d'affaire et corbeille, une seule copie
 db/zones-climatiques.json  correspondance département → zone, à vérifier
-db/schema.sql DDL du prototype
+db/schema.sql DDL de référence : c'est lui qui fait foi
 db/seed.mjs   jeu de données de démonstration
-prisma/schema.prisma  modèle de référence pour la cible PostgreSQL
+jeu-demo.mjs  dossier de démonstration à planter / retirer sur une base réelle
+prisma/schema.prisma  ancien modèle, qui a divergé du schéma réel
 ```
 
 ### Base de données
 
-Le prototype tourne sur **SQLite** via le module `node:sqlite` intégré à Node 22 :
+La plateforme tourne sur **SQLite** via le module `node:sqlite` intégré à Node 22 :
 aucune installation, aucun conteneur, la base est un fichier.
 
-La cible de production est **PostgreSQL**. Le modèle complet est décrit dans
-`prisma/schema.prisma` — il couvre déjà les entités que le prototype n'expose pas encore
-(interventions, documents, liasses, lots de dépôt, commissions, contrôles).
-Pour basculer : passer le `provider` à `postgresql`, renseigner `DATABASE_URL`,
-puis `npx prisma migrate dev`.
+La cible de production est **PostgreSQL**. `prisma/schema.prisma` devait en être le modèle,
+mais il a divergé : il ignore une grande partie des tables réelles. La référence est
+`db/schema.sql` ; le modèle Prisma est à régénérer depuis lui, ou à supprimer, avant toute
+bascule.
 
 ## Le modèle de marge
 
-Chaque deal porte **12 ratios en €/MWh cumac** : deux régimes (précaire / classique)
-× trois parties (délégataire, prime cédée au bénéficiaire, commission installateur)
+Chaque deal porte **18 ratios en €/MWh cumac** : trois régimes (grande précarité, précaire,
+classique) × trois parties (délégataire, prime cédée au bénéficiaire, commission installateur)
 × avec ou sans MaPrimeRénov'.
+
+Chaque deal dit aussi son **mode de reversement** : prime cédée et commission installateur
+sont-elles **cumulées**, ou **au choix** selon qui touche la prime ? Tant qu'un deal ne le dit
+pas, aucune marge n'est calculée sur ses dossiers — la plateforme affiche un tiret, pas un zéro.
 
 ```
 Versé par le délégataire   = ratio_délégataire      × MWh cumac
@@ -280,10 +323,10 @@ Versé par le délégataire   = ratio_délégataire      × MWh cumac
 Modifier un deal ne recalcule jamais les dossiers existants — le recalcul est une action
 explicite. Sans cela, tout l'historique de marge se corrompt au premier changement de tarif.
 
-## Données réglementaires du jeu de démonstration
+## Données réglementaires du jeu `npm run seed`
 
-Les paramètres réglementaires sont réels et sourcés ; les dossiers, sociétés et régies
-sont synthétiques.
+Ce jeu sert aux essais sur une base jetable : il efface la base. Les paramètres
+réglementaires sont réels et sourcés ; les dossiers, sociétés et régies sont synthétiques.
 
 | Fiche | État | Référence |
 |---|---|---|
@@ -295,24 +338,30 @@ sont synthétiques.
 Coefficients BAT-EQ-127 (kWh cumac par watt installé) : hôtellerie-restauration 31,
 commerce 36, bureaux 35, santé 38, enseignement 24, autres 24.
 
+## Contrôles automatiques
+
+`./tester.sh` lance les suites autonomes sur une copie de la base, dont le dossier de
+démonstration est retiré. Chacune monte sa propre base jetable quand elle en a besoin.
+
+| Suite | Ce qu'elle vérifie |
+|---|---|
+| `fiches`, `dimensionnement`, `site-listes`, `typage`, `veille-fiches` | Calcul cumac, référentiel, listes fermées du site, typage des pièces |
+| `deals`, `devis`, `facture`, `emmy`, `controles-depot` | Grille de ratios, mentions légales, numérotation sans trou, tableau de dépôt |
+| `espace-client`, `qualification`, `pieces-reprise` | Espace client et propositions, fiche de qualification, reprise des pièces |
+| `acompte` | Factures d'acompte : ventilation de TVA, déduction, avoir |
+| `planning` | Jours sans fuseau, déplacement, date de pose, portée, migrations |
+| `aap` | Appels à paiement : écarts, gel, série de factures, statuts en masse |
+| `sav-corbeille` | S.A.V ; dossier à la corbeille absent de chaque écran ; suppression définitive |
+| `listes-societes` | IBAN, SIRET/SIREN/TVA, préfixes de série, logo, IBAN figé sur facture |
+| `schema-crlf` | La mise à niveau du schéma ne dépend ni des fins de ligne ni des commentaires |
+
+Sous Windows, `operations.mjs` et `commercial.mjs` écrivent dans `/tmp` et ne se lancent
+pas, et plusieurs suites échouent au nettoyage final (fichier encore ouvert) après avoir
+tout vérifié : comptez les lignes `OK` / `ÉCHEC` plutôt que le code de sortie.
+
 ## Ce qui reste à faire
 
-- **Référentiel complet** des ~234 fiches en vigueur avec leurs coefficients réels.
-  Le prototype en contient 8, choisies pour illustrer les cas de figure (en vigueur,
-  supprimée, suppression annoncée). L'écran `/referentiel/import` permet de charger le
-  catalogue réel en CSV : c'est une saisie de données, plus un développement.
-  **Les coefficients doivent venir des arrêtés ou du gabarit du délégataire — ne pas
-  les inventer, ils commandent directement la valorisation.**
-- **Export EMMY / PNCEE** au format exact du registre : l'export actuel est un tableau
-  récapitulatif générique, à faire correspondre au gabarit attendu en renommant les en-têtes
-  dans `lib/export.js`
-- **Envoi automatique des liens d'activation** : aujourd'hui le gérant copie le lien
-  affiché et le transmet lui-même. Un envoi par e-mail demande un serveur SMTP.
-- **Reste du périmètre Pixel** : les 7 intervenants typés par dossier, les 7 plannings par
-  type de rendez-vous, les rappels, le SAV, les appels à paiement et la corbeille.
-- **Mise en ligne** : le prototype tourne sur un fichier SQLite posé sur un poste.
-  Passer en PostgreSQL et déployer sur un serveur est ce qui rendra l'outil accessible
-  à l'équipe depuis n'importe où.
-- **Application terrain hors-ligne** : photos horodatées et géolocalisées, signature
-- **Commissions apporteurs** et rapports croisés par régie
-- **API REST et webhooks**
+Le détail est dans les notes internes de `docs/` (hors dépôt). En bref : renseigner les
+sociétés émettrices (SIRET, assurance décennale) et le mode de reversement des deals, puis
+la mise en ligne ; côté code, l'attestation sur l'honneur, les e-mails, la vue carte du
+planning, la validation d'un fichier Emmy, et régénérer ou retirer `prisma/schema.prisma`.

@@ -58,7 +58,7 @@
   <b>Pour commencer</b>
   <a href="#demarrer">1. Allumer le logiciel</a>
   <a href="#connexion">2. Se connecter</a>
-  <a href="#mots">3. Les 12 mots à connaître</a>
+  <a href="#mots">3. Les mots à connaître</a>
   <a href="#ecrans">4. La barre de gauche</a>
 
   <b>Le travail de tous les jours</b>
@@ -68,24 +68,29 @@
   <a href="#figer">8. Calculer et figer</a>
   <a href="#pieces">9. Les pièces</a>
   <a href="#devis">10. Le devis</a>
-  <a href="#facture">11. La facture et l'avoir</a>
+  <a href="#facture">11. La facture, l'acompte et l'avoir</a>
   <a href="#client">12. L'espace client</a>
+  <a href="#rappels">13. Les rappels</a>
+  <a href="#planning">14. Le planning</a>
+  <a href="#sav">15. Le S.A.V</a>
 
-  <b>Chercher et déposer</b>
-  <a href="#liste">13. La liste des dossiers</a>
-  <a href="#lots">14. Les lots de dépôt</a>
-  <a href="#simulateur">15. Le simulateur</a>
-  <a href="#referentiel">16. Le référentiel des fiches</a>
+  <b>Chercher, déposer, encaisser</b>
+  <a href="#liste">16. La liste des dossiers</a>
+  <a href="#lots">17. Les lots de dépôt</a>
+  <a href="#aap">18. Les appels à paiement</a>
+  <a href="#simulateur">19. Le simulateur</a>
+  <a href="#referentiel">20. Le référentiel des fiches</a>
+  <a href="#corbeille">21. La corbeille</a>
 
   <b>Régler le logiciel</b>
-  <a href="#parametrage">17. Le paramétrage</a>
-  <a href="#comptes">18. Comptes et rôles</a>
+  <a href="#parametrage">22. Le paramétrage</a>
+  <a href="#comptes">23. Comptes et rôles</a>
 
   <b>Bon à savoir</b>
-  <a href="#pieges">19. Les 8 pièges</a>
-  <a href="#sauvegarde">20. Sauvegarder</a>
-  <a href="#depannage">21. Que faire si…</a>
-  <a href="#technique">22. Pour votre développeur</a>
+  <a href="#pieges">24. Les 10 pièges</a>
+  <a href="#sauvegarde">25. Sauvegarder</a>
+  <a href="#depannage">26. Que faire si…</a>
+  <a href="#technique">27. Pour votre développeur</a>
 </nav>
 
 <main>
@@ -97,7 +102,7 @@ puis à consulter au besoin. Vous pouvez l'imprimer : <kbd>Ctrl</kbd> + <kbd>P</
 <div class="bloc">
 <p><b>Comment lire ce guide.</b> Chaque chapitre répond à trois questions dans le même ordre :
 <b>à quoi ça sert</b>, <b>ce que vous voyez à l'écran</b>, <b>ce que vous devez faire</b>.
-Les chemins sont écrits comme ceci : <span class="chemin">Dossiers → un dossier → Pièces du dossier</span>.</p>
+Les chemins sont écrits comme ceci : <span class="chemin">Dossiers → un dossier → onglet Pièces</span>.</p>
 </div>
 
 <!-- ══════════════════════════════════════════════════ -->
@@ -172,7 +177,7 @@ La seule solution est d'en refaire un :</p>
 </ul>
 
 <!-- ══════════════════════════════════════════════════ -->
-<h2 id="mots"><span class="num">3.</span> Les 12 mots à connaître</h2>
+<h2 id="mots"><span class="num">3.</span> Les mots à connaître</h2>
 
 <p>Vous les connaissez déjà par le métier. Voici ce que le logiciel met derrière chacun.</p>
 
@@ -184,12 +189,14 @@ La seule solution est d'en refaire un :</p>
   <tr><td><b>Zone climatique</b></td><td>H1, H1_IDF, H2 ou H3. Déduite du code postal du chantier. Elle change le coefficient, donc le volume.</td></tr>
   <tr><td><b>Secteur</b></td><td>Agriculture, industrie, tertiaire… Choisi sur le site des travaux.</td></tr>
   <tr><td><b>Charte / CDP</b></td><td>« Coup de pouce » ou hors coup de pouce. Change le prix payé par le délégataire.</td></tr>
-  <tr><td><b>Régime</b></td><td>Classique ou précaire (grande précarité incluse). Change lui aussi le prix.</td></tr>
+  <tr><td><b>Régime</b></td><td>Classique, précaire ou grande précarité. Se choisit sur le bénéficiaire. Change lui aussi le prix.</td></tr>
   <tr><td><b>MPR</b></td><td>MaPrimeRénov'. Sa présence modifie la valorisation.</td></tr>
   <tr><td><b>Délégataire</b></td><td>Celui qui achète les CEE et qui vous paie.</td></tr>
   <tr><td><b>Deal</b></td><td>Votre accord commercial avec un délégataire : les prix au MWh, par régime et par charte. Un deal a des <b>versions</b> datées.</td></tr>
   <tr><td><b>Liasse</b></td><td>La liste des pièces exigées pour un couple délégataire + fiche. C'est elle qui décide si un dossier est « complet ».</td></tr>
   <tr><td><b>Lot</b></td><td>Un paquet de dossiers déposés ensemble chez le délégataire.</td></tr>
+  <tr><td><b>AAF / appel à paiement</b></td><td>Après le dépôt, le délégataire valide les volumes et vous envoie un <b>appel à facturation</b> (AAF). Vous lui facturez les primes, puis il vous paie : c'est l'<b>appel à paiement</b>.</td></tr>
+  <tr><td><b>Intervention</b></td><td>Un rendez-vous chez le client, au planning : rendez-vous commercial, prévisite, pose, S.A.V…</td></tr>
 </table>
 
 <!-- ══════════════════════════════════════════════════ -->
@@ -202,11 +209,16 @@ pas les mêmes entrées qu'un gérant.</p>
   <tr><th style="width:200px">Entrée</th><th>À quoi ça sert</th></tr>
   <tr><td>Tableau de bord</td><td>La photo du jour : où en sont les dossiers, les alertes.</td></tr>
   <tr><td>Dossiers</td><td>La liste. Chercher, filtrer, exporter, créer.</td></tr>
-  <tr><td>Lots de dépôt</td><td>Préparer les paquets à envoyer au délégataire.</td></tr>
+  <tr><td>Rappels</td><td>Qui rappeler aujourd'hui, et qui aurait dû l'être hier. Une pastille rouge compte les vôtres.</td></tr>
+  <tr><td>Planning</td><td>Les rendez-vous et interventions de l'équipe, jour par jour.</td></tr>
+  <tr><td>S.A.V</td><td>Tout incident qui rouvre un dossier après coup.</td></tr>
+  <tr><td>Lots de dépôt</td><td>Préparer les paquets à envoyer au délégataire, puis suivre leur validation.</td></tr>
+  <tr><td>Appels à paiement</td><td>Facturer au délégataire ce qu'il a validé, et vérifier ce qu'il a payé.</td></tr>
   <tr><td>Simulateur de marge</td><td>Tester un cas <b>sans créer de dossier</b>.</td></tr>
   <tr><td>Référentiel des fiches</td><td>Consulter les fiches, leurs versions, leurs formules.</td></tr>
-  <tr><td>Paramétrage</td><td>Les réglages : délégataires, deals, pièces, installateurs…</td></tr>
+  <tr><td>Paramétrage</td><td>Les réglages : sociétés, délégataires, deals, pièces, listes…</td></tr>
   <tr><td>Comptes et rôles</td><td>Qui a le droit de faire quoi.</td></tr>
+  <tr><td>Corbeille</td><td>Les dossiers supprimés, à récupérer ou à effacer pour de bon.</td></tr>
 </table>
 
 <!-- ══════════════════════════════════════════════════ -->
@@ -216,8 +228,10 @@ pas les mêmes entrées qu'un gérant.</p>
 
 <h3>Ce que vous voyez</h3>
 <ul>
-  <li><b>Pipeline</b> — combien de dossiers à chaque étape, et le cumac correspondant.
-      Cliquez sur une étape : vous arrivez sur la liste filtrée.</li>
+  <li><b>Pipeline</b> — combien de dossiers à chaque étape.
+      Cliquez sur un statut : vous arrivez sur la liste filtrée. Un dossier qui n'a encore
+      aucun statut apparaît sous <b>« Sans statut »</b>, étiquette « à classer » : donnez-lui
+      un statut dans l'onglet Administratif.</li>
   <li><b>Radar de conformité</b> — le taux d'opérations non satisfaisantes, comparé au plafond
       réglementaire (14 % en 2026, 12 % en 2027, 10 % en 2028). Par unité d'affaire et par fiche.
       <b>Au-dessus du plafond, c'est un risque de sanction</b>, pas une simple statistique.</li>
@@ -233,7 +247,8 @@ pas les mêmes entrées qu'un gérant.</p>
 <p>L'écran a trois blocs. Remplissez-les de haut en bas.</p>
 
 <h3>1) Bénéficiaire</h3>
-<p>C'est le client final, celui qui fait les travaux. Raison sociale, SIRET, contact.</p>
+<p>C'est le client final, celui qui fait les travaux. Raison sociale, SIRET, contact.
+Tout se complète ensuite dans l'onglet Bénéficiaire du dossier.</p>
 
 <h3>2) Site des travaux</h3>
 <p>L'adresse du chantier. <b>Trois champs sont obligatoires : adresse, code postal, ville.</b>
@@ -254,7 +269,8 @@ Ne le laissez jamais approximatif.</p>
 <!-- ══════════════════════════════════════════════════ -->
 <h2 id="dossier"><span class="num">7.</span> L'écran d'un dossier</h2>
 
-<p>C'est l'écran central du logiciel. Il est long : on le parcourt de haut en bas.</p>
+<p>C'est l'écran central du logiciel. En haut, l'en-tête et les boutons ; dessous, des
+<b>onglets</b>, un par sujet.</p>
 
 <h3>L'en-tête</h3>
 <p>Le numéro, une <b>pastille de statut</b> colorée, et parfois l'étiquette
@@ -264,66 +280,51 @@ Ne le laissez jamais approximatif.</p>
   <tr><th style="width:210px">Bouton</th><th>Ce qu'il fait</th></tr>
   <tr><td><b>Calculer et figer</b> / <b>Recalculer</b></td><td>Arrête les montants sur le dossier. Voir le chapitre 8.</td></tr>
   <tr><td><b>Aperçu du devis</b></td><td>Ouvre le devis dans un onglet. <b>N'écrit rien</b>, ne prend pas de numéro.</td></tr>
+  <tr><td><b>Émettre le devis</b></td><td>Donne au devis son numéro définitif. Voir le chapitre 10.</td></tr>
   <tr><td><b>Aperçu de la facture</b></td><td>Pareil, en filigrane « NON ÉMISE ».</td></tr>
   <tr><td><b>Émettre la facture</b></td><td>Là, oui : la facture devient réelle et prend un numéro définitif.</td></tr>
   <tr><td><b>Émettre un avoir</b></td><td>Apparaît une fois la facture émise. Annule la facture proprement.</td></tr>
-  <tr><td><b>Verrouiller</b></td><td>Gèle le dossier : plus aucune modification, plus aucune pièce. À faire au dépôt.</td></tr>
+  <tr><td><b>Acompte</b></td><td>Mène au bloc Facturation de l'onglet Commercial, pour facturer un acompte. Voir le chapitre 11.</td></tr>
+  <tr><td><b>Corbeille</b></td><td>Retire le dossier de partout, de façon réversible. Voir le chapitre 21.</td></tr>
+  <tr><td><b>Verrouiller</b></td><td>Gèle le dossier : plus aucune modification, plus aucune pièce. Le dépôt d'un lot le fait tout seul.</td></tr>
 </table>
 
-<h3>Calcul du volume</h3>
-<p>La fiche retenue, sa version, ses dates de validité, le secteur, la zone, le coefficient,
-et le <b>volume cumac</b>. La ligne grise en dessous explique le calcul en toutes lettres.
-Si le résultat vous surprend, c'est là qu'on comprend pourquoi.</p>
+<h3>Les onglets</h3>
+<p>Un chiffre sur un onglet signale ce qui attend : pièces manquantes (rouge), anomalies
+commerciales ou propositions du client (orange), rappels, interventions à planifier et
+S.A.V ouverts. L'onglet ouvert reste le même quand vous enregistrez, et l'adresse de la page
+le désigne : vous pouvez envoyer à un collègue le lien direct vers l'onglet Pièces d'un dossier.</p>
+<table>
+  <tr><th style="width:150px">Onglet</th><th>Ce qu'on y trouve</th></tr>
+  <tr><td><b>Synthèse</b></td><td>Le <b>calcul du volume</b> (fiche, version, zone, coefficient, cumac — la ligne grise explique le calcul en toutes lettres), la <b>valorisation</b> (ce que verse le délégataire, moins la prime cédée, les commissions, égale la marge nette) et les <b>conditions d'éligibilité</b> de la fiche.</td></tr>
+  <tr><td><b>Bénéficiaire</b></td><td>La société, son <b>signataire</b> (civilité, nom, fonction), son <b>siège</b>, et le <b>régime de revenu</b> — qui choisit le barème du deal. Changer le régime change la prime : pensez à recalculer.</td></tr>
+  <tr><td><b>Chantier</b></td><td>Adresse, code postal, ville, zone climatique, secteur, chauffage, âge du bâtiment, surface, QPV.</td></tr>
+  <tr><td><b>Opérations</b></td><td>Les opérations du dossier — il peut en porter plusieurs, sur plusieurs chantiers — avec produit, quantité et prix.</td></tr>
+  <tr><td><b>Commercial</b></td><td>Le parcours commercial (source du lead, rendez-vous, état du devis), les intervenants, le réglage du devis et de la facture, et le bloc <b>Facturation</b> (pièces émises, acomptes).</td></tr>
+  <tr><td><b>Technique</b></td><td>Réseau public de chaleur, audit énergétique, <b>AMO / MAR</b> (MaPrimeRénov' accompagné) et, pour le séchage, le dimensionnement du bureau d'études.</td></tr>
+  <tr><td><b>Administratif</b></td><td>Les statuts (dossier, administratif, facturation, installation, COFRAC), le deal, la quantité, la charte, les dates d'engagement, de pose et de dépôt.</td></tr>
+  <tr><td><b>Contrôle</b></td><td>Les contrôles COFRAC, premier et second passage.</td></tr>
+  <tr><td><b>Pièces</b></td><td>Les pièces exigées et déposées. Voir le chapitre 9.</td></tr>
+  <tr><td><b>Suivi</b></td><td>Les <b>interventions</b> (chapitre 14), les <b>S.A.V</b> (chapitre 15), les <b>rappels</b> (chapitre 13), le <b>journal des modifications</b> et les <b>notes</b>.</td></tr>
+  <tr><td><b>Espace client</b></td><td>Les accès du client et ses propositions de correction. Voir le chapitre 12.</td></tr>
+</table>
 
-<h3>Valorisation</h3>
-<p>L'argent, ligne par ligne : ce que verse le délégataire, moins la prime cédée au bénéficiaire,
-moins la commission installateur, moins la commission apporteur, égale la <b>marge nette</b>.</p>
 <div class="bloc">
-<p>Les rôles <b>Régie</b> et <b>Apporteur</b> ne voient pas ce bloc. Ce n'est pas seulement caché
-à l'écran : le serveur ne leur envoie pas les chiffres.</p>
+<p>Les rôles <b>Régie</b> et <b>Apporteur</b> ne voient pas la valorisation. Ce n'est pas seulement
+caché à l'écran : le serveur ne leur envoie pas les chiffres.</p>
 </div>
 
-<h3>Modifier le dossier</h3>
-<p>Les listes déroulantes de statut (les « axes » du pipeline), la quantité, la charte,
-la date d'engagement, la source du lead.</p>
-
-<h3>Site et données réglementaires</h3>
-<p>Adresse, code postal, ville, département, zone climatique, secteur, surface, QPV,
-âge du bâtiment, type de chauffage, parcelle cadastrale.</p>
 <div class="bloc att">
 <p><b>Adresse, code postal et ville ne peuvent pas être vidés.</b> Si vous effacez l'un des trois
 et que vous enregistrez, le logiciel refuse et <b>n'enregistre rien du tout</b> — il vous le dit
-en haut de la page. Corrigez le champ, puis réenregistrez.</p>
+en haut de l'onglet. Même chose pour un SIRET qui n'a pas 14 chiffres.</p>
 </div>
 
-<h3>Opérations et chantiers</h3>
-<p>Un dossier peut porter <b>plusieurs opérations</b>. Dans ce cas, l'en-tête indique
-« opération principale » : le bloc Calcul du volume montre celle-là, mais le total du dossier
-tient compte de toutes. On ajoute aussi ici les <b>chantiers</b> rattachés.</p>
-
-<h3>Dimensionnement — bureau d'études</h3>
-<p>Deux colonnes : <b>ce que le client a déclaré</b>, et <b>les conclusions</b> du bureau d'études.
-Elles restent séparées exprès : on garde la trace du déclaratif même quand il est démenti.</p>
-<p>Quand les conclusions sont fiables, le bouton <b>« Porter le dimensionnement dans le calcul CEE »</b>
-reprend la quantité retenue dans le dossier. Tant que vous ne cliquez pas, rien ne bouge.</p>
-
-<h3>Parcours commercial</h3>
-<p>Type de lead, état du devis, numéro de devis, rattachement au lot.</p>
-
-<h3>Devis et facture · Réseau public de chaleur · Audit énergétique · Contrôles</h3>
-<p>Quatre petits blocs de saisie réglementaire. Ils alimentent les pièces et le tableau de dépôt.
-<b>Contrôles</b> reçoit les contrôles COFRAC et leurs résultats.</p>
-
-<h3>Journal des modifications</h3>
-<p>Qui a changé quoi, quand, avant et après. Champ par champ. Personne ne peut l'effacer.
-C'est votre preuve en cas de litige.</p>
-
-<h3>Notes et échanges</h3>
-<p>Le fil de discussion interne du dossier. Écrivez-y ce que vous diriez au téléphone :
-« client rappelle lundi », « manque le RIB ». Ce n'est pas visible par le client.</p>
-
-<h3>Conditions d'éligibilité de la fiche</h3>
-<p>Ce que la fiche exige pour être valable. À relire avant de déposer.</p>
+<h3>Le journal et les notes</h3>
+<p>Le <b>journal</b> dit qui a changé quoi, quand, avant et après. Champ par champ. Personne ne
+peut l'effacer : c'est votre preuve en cas de litige. Les <b>notes</b> sont le fil interne du
+dossier : écrivez-y ce que vous diriez au téléphone. Un rappel fait, une intervention réalisée
+ou un S.A.V clôturé y laissent aussi une note. Rien de tout cela n'est visible par le client.</p>
 
 <!-- ══════════════════════════════════════════════════ -->
 <h2 id="figer"><span class="num">8.</span> Calculer et figer — la règle la plus importante</h2>
@@ -353,7 +354,14 @@ mais <b>seuls les montants figés comptent</b>.</p>
 </div>
 
 <p>Tant que vous n'avez pas recalculé, les montants du dossier restent ceux du jour du figeage.
-Le devis et la facture utilisent ces montants-là.</p>
+Le devis, la facture et l'appel à paiement utilisent ces montants-là.</p>
+
+<div class="bloc">
+<p><b>Si la marge affiche un tiret.</b> Le deal du dossier ne dit pas encore si « prime cédée »
+et « commission installateur » sont deux tarifs au choix ou deux versements cumulés. Tant que
+ce n'est pas réglé sur le deal (<span class="chemin">Paramétrage → Deals et tarifs</span>), aucune
+marge n'est calculée : un tiret vaut mieux qu'un chiffre faux.</p>
+</div>
 
 <!-- ══════════════════════════════════════════════════ -->
 <h2 id="pieces"><span class="num">9.</span> Les pièces du dossier</h2>
@@ -374,7 +382,7 @@ les autres sont marquées « (facultative) ».</p>
 <div class="bloc">
 <p><b>La liste vient de la liasse</b> paramétrée pour ce couple délégataire + fiche.
 Si vous lisez <i>« Aucune liasse n'est paramétrée »</i>, ce n'est pas un bug : il faut créer la
-liasse dans <span class="chemin">Paramétrage → Pièces</span>, sinon le logiciel ne peut rien contrôler.</p>
+liasse dans <span class="chemin">Paramétrage → Pièces et liasses</span>, sinon le logiciel ne peut rien contrôler.</p>
 </div>
 
 <h3>Déposer une pièce</h3>
@@ -393,7 +401,7 @@ liasse dans <span class="chemin">Paramétrage → Pièces</span>, sinon le logic
 <li>il ne stocke pas deux fois un fichier déjà présent à l'identique ;</li>
 <li>il refuse tout dépôt si le dossier est verrouillé.</li>
 </ul>
-<p>Quand une pièce est refusée, un bandeau rouge en haut de la page dit pourquoi.</p>
+<p>Quand une pièce est refusée, un bandeau rouge en haut de l'onglet dit pourquoi.</p>
 </div>
 
 <h3>Valider, voir, retirer</h3>
@@ -413,7 +421,7 @@ liasse dans <span class="chemin">Paramétrage → Pièces</span>, sinon le logic
 <table>
   <tr><th style="width:210px">Geste</th><th>Effet</th></tr>
   <tr><td><b>Aperçu du devis</b></td><td>Ouvre le document. <b>N'écrit rien.</b> Vous pouvez cliquer cent fois.</td></tr>
-  <tr><td><b>Émettre</b> (bloc commercial)</td><td>Attribue le numéro définitif et fige le contenu.</td></tr>
+  <tr><td><b>Émettre le devis</b></td><td>Attribue le numéro définitif, pris dans la série de la société, et passe le devis « à signer ». Le bouton disparaît ensuite : un devis émis ne se renumérote pas.</td></tr>
 </table>
 
 <h3>Ce que le devis contient tout seul</h3>
@@ -426,13 +434,14 @@ liasse dans <span class="chemin">Paramétrage → Pièces</span>, sinon le logic
 </ul>
 
 <div class="bloc att">
-<p><b>Si une mention ressemble à « — » ou à un trou</b>, c'est qu'une information manque dans
-<span class="chemin">Paramétrage</span> (SIRET, assurance décennale, numéro RGE…).
-Le logiciel n'invente jamais une mention légale : il préfère afficher un vide visible.</p>
+<p><b>Si l'émission est refusée</b>, le message dit ce qui manque à la société (SIRET, assurance
+décennale…). Complétez-la dans <span class="chemin">Paramétrage → Sociétés émettrices</span> : l'écran
+liste, pour chaque société, exactement ce que l'émission refusera. Le logiciel n'invente jamais une
+mention légale.</p>
 </div>
 
 <!-- ══════════════════════════════════════════════════ -->
-<h2 id="facture"><span class="num">11.</span> La facture et l'avoir</h2>
+<h2 id="facture"><span class="num">11.</span> La facture, l'acompte et l'avoir</h2>
 
 <h3>La règle</h3>
 <div class="bloc dgr">
@@ -450,12 +459,32 @@ C'est la loi, et le logiciel l'applique sans exception. Pour corriger, on émet 
       négative de la facture, et il pointe vers elle. Vous pouvez ensuite refacturer proprement.</li>
 </ol>
 
+<h3>L'acompte</h3>
+<p><span class="chemin">Dossier → onglet Commercial → Facturation</span> (ou le bouton <b>Acompte</b> en haut).</p>
+<ol>
+  <li>Indiquez un <b>pourcentage du net à payer</b> par le client, ou un <b>montant TTC</b>
+      (le montant l'emporte sur le pourcentage) ;</li>
+  <li><b>Aperçu</b> pour relire, puis <b>Émettre la facture d'acompte</b>.</li>
+</ol>
+<ul>
+  <li>L'acompte est une vraie facture, dans la <b>même série</b> que les autres.</li>
+  <li>Il est réparti par taux de TVA comme le devis.</li>
+  <li><b>La facture finale le déduit toute seule</b> et cite son numéro.</li>
+  <li>Un acompte déjà déduit ne s'annule pas seul : on annule d'abord la facture finale par un
+      avoir, et l'acompte redevient « à déduire ».</li>
+</ul>
+<p>Le bloc Facturation liste aussi toutes les pièces émises du dossier — factures, acomptes,
+avoirs — avec leur état, et permet d'annuler l'une d'elles par un avoir.</p>
+
 <h3>Ce qui est sur la facture, imposé par la loi</h3>
 <ul>
-  <li>le numéro de TVA intracommunautaire, calculé automatiquement d'après le SIREN ;</li>
+  <li>le numéro de TVA intracommunautaire, contrôlé d'après le SIREN ;</li>
   <li>les <b>pénalités de retard</b> et l'<b>indemnité forfaitaire de 40 €</b> (art. L.441-10 et D.441-5) ;</li>
   <li>un délai de règlement qui ne peut pas dépasser 60 jours.</li>
 </ul>
+<p>Si la société a un compte bancaire (<span class="chemin">Paramétrage → Sociétés émettrices</span>),
+son <b>IBAN</b> est imprimé dans le bloc de règlement. Il est recopié sur la facture à l'émission :
+changer de banque plus tard ne modifie pas une facture déjà envoyée.</p>
 
 <div class="bloc">
 <p><b>Pourquoi l'émission n'est pas un simple lien.</b> Émettre consomme un numéro de votre série.
@@ -471,7 +500,7 @@ et pas un lien.</p>
 sans lui ouvrir votre logiciel.</p>
 
 <h3>Créer un accès</h3>
-<p><span class="chemin">Dossier → Espace client → Générer un nouvel accès</span></p>
+<p><span class="chemin">Dossier → onglet Espace client → Générer un nouvel accès</span></p>
 <p>Un bandeau bleu apparaît immédiatement avec <b>deux codes</b> :</p>
 <ul>
   <li>l'<b>identifiant</b> (format <code>XXXX-XXXX-XXXX</code>) ;</li>
@@ -508,10 +537,108 @@ C'est vous qui acceptez ou refusez. <b>Le client propose, vous arbitrez.</b></p>
 </div>
 
 <h3>Fermer un accès</h3>
-<p>Bouton <b>Révoquer</b> en face de l'accès. Effet immédiat : le client ne voit plus rien.</p>
+<p>Bouton <b>Révoquer</b> en face de l'accès. Effet immédiat : le client ne voit plus rien.
+Mettre le dossier à la corbeille ferme aussi l'accès du client.</p>
 
 <!-- ══════════════════════════════════════════════════ -->
-<h2 id="liste"><span class="num">13.</span> La liste des dossiers</h2>
+<h2 id="rappels"><span class="num">13.</span> Les rappels</h2>
+
+<p><b>À quoi ça sert :</b> ne plus oublier de rappeler un client. Une note raconte ce qui s'est
+passé ; un rappel engage quelqu'un à faire quelque chose à une date.</p>
+
+<h3>Programmer un rappel</h3>
+<p><span class="chemin">Dossier → onglet Suivi → Rappels</span> : une date et une heure, un motif
+(rappeler le client, relance devis, confirmer le rendez-vous, pièce manquante, relance signature AH,
+relance paiement, autre), la personne, un commentaire. <b>Programmer.</b></p>
+
+<h3>La page Rappels</h3>
+<p>Quatre onglets : <b>En retard</b>, <b>Du jour</b>, <b>À venir</b>, <b>Faits</b>. Par défaut, vous
+voyez les vôtres ; le filtre « Attribué à » montre ceux d'un collègue, de toute l'équipe, ou ceux
+que personne n'a pris. La pastille rouge du menu compte vos rappels du jour et en retard.</p>
+<ul>
+  <li><b>Fait</b> — avec un compte rendu, qui est aussi versé dans les notes du dossier ;</li>
+  <li><b>Reporter</b> — à une autre date ; l'ancienne est notée dans le commentaire ;</li>
+  <li><b>Attribué à</b> — passer le rappel à quelqu'un d'autre ;</li>
+  <li><b>Rouvrir</b> — un rappel marqué fait par erreur.</li>
+</ul>
+<div class="bloc">
+<p>Un rappel de 9 h non fait à 11 h reste « du jour » : il ne passe en retard que le lendemain.
+Sinon la liste du jour se viderait dans la matinée sans que rien n'ait été fait.</p>
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<h2 id="planning"><span class="num">14.</span> Le planning</h2>
+
+<p><b>À quoi ça sert :</b> voir qui va où, quand, et réorganiser la semaine en faisant glisser
+les rendez-vous.</p>
+
+<h3>Créer une intervention</h3>
+<p><span class="chemin">Dossier → onglet Suivi → Interventions</span> : le type (rendez-vous
+commercial, prévisite technique, audit énergétique, ouverture de chantier, pose, fin de pose,
+S.A.V), le début et la fin, la personne, un commentaire. <b>Laissez la date vide</b> si elle n'est
+pas encore connue : l'intervention attend dans la colonne « À planifier ».</p>
+
+<h3>Ce que vous voyez</h3>
+<ul>
+  <li>Une ligne par personne, regroupées par rôle, plus une ligne <b>« Non attribuées »</b> ;
+      une colonne par jour, en vue <b>7 jours</b> ou <b>Mois</b> ;</li>
+  <li>en haut, un onglet par calendrier (pose, prévisite…) avec leur nombre, et « Tous les calendriers » ;</li>
+  <li>à droite, la colonne <b>À planifier</b>.</li>
+</ul>
+
+<h3>Ce que vous faites</h3>
+<ul>
+  <li><b>Faire glisser</b> une intervention sur un autre jour ou une autre personne : elle garde son
+      heure et sa durée. Une carte « à planifier » posée sur un jour arrive à 8 h.</li>
+  <li><b>Cliquer</b> une intervention ouvre son détail : modifier les dates, la personne, le commentaire ;
+      <b>Rendez-vous confirmé</b> ; <b>Réalisée</b> avec un compte rendu ; <b>Annuler</b> avec un motif.</li>
+</ul>
+
+<div class="bloc att">
+<p><b>Un rendez-vous confirmé que vous déplacez redevient « planifié ».</b> Le client avait dit oui
+à une autre date : il faut le reconfirmer. Changer seulement de personne garde la confirmation.</p>
+</div>
+
+<div class="bloc ok">
+<p><b>Ce que « Réalisée » fait tout seul :</b> une note est versée au dossier, et la date
+correspondante du dossier est renseignée si elle est vide — la <b>pose</b> donne la date de pose,
+la <b>fin de pose</b> la date d'achèvement, le <b>rendez-vous commercial</b> la date de visite.
+Une date déjà saisie n'est jamais écrasée.</p>
+</div>
+
+<p>Avec le droit « planning de toute l'équipe » (gérant, ADV), vous voyez et organisez tout le
+monde, et le bouton <b>Mon planning</b> ne garde que vos lignes. Sans ce droit, vous ne voyez et ne
+déplacez que vos propres interventions.</p>
+
+<!-- ══════════════════════════════════════════════════ -->
+<h2 id="sav"><span class="num">15.</span> Le S.A.V</h2>
+
+<p><b>À quoi ça sert :</b> suivre tout ce qui rouvre un dossier après coup — un contrôle COFRAC ou
+PNCEE, un refus ou un arbitrage de l'organisme, une pièce incohérente, un reliquat de travaux,
+une panne.</p>
+
+<h3>Ouvrir un S.A.V</h3>
+<p><span class="chemin">Dossier → onglet Suivi → S.A.V</span> : le type, le motif, la personne, le
+problème. <b>Ouvrir un S.A.V</b> mène à sa fiche, numérotée <code>SAV-2026-0001</code>.</p>
+
+<h3>La fiche d'un S.A.V</h3>
+<ul>
+  <li>type, motif, statut, personne attribuée, date d'intervention, réglé le, problème, observation ;</li>
+  <li><b>Planifier</b> crée l'intervention S.A.V au planning et la rattache : sa date suit ensuite le planning ;</li>
+  <li>l'<b>historique</b> garde chaque changement.</li>
+</ul>
+<div class="bloc">
+<p><b>Clôturer.</b> Choisir le statut « Réglé » clôt le S.A.V ; cocher « Clôturé » le passe en
+« Réglé ». Décocher « Clôturé » le rouvre et le remet « À traiter ». Une note est versée au dossier
+à chaque clôture et réouverture.</p>
+</div>
+
+<h3>La page S.A.V</h3>
+<p>Un onglet par statut avec son nombre, les clôturés à part, des filtres (type, motif, personne,
+recherche) et <b>Exporter (CSV)</b>, qui s'ouvre dans Excel.</p>
+
+<!-- ══════════════════════════════════════════════════ -->
+<h2 id="liste"><span class="num">16.</span> La liste des dossiers</h2>
 
 <h3>Chercher</h3>
 <p>Le panneau de recherche est replié par défaut — après une recherche, on veut voir le résultat,
@@ -538,15 +665,17 @@ Le fichier s'ouvre dans Excel.</p>
 ce qui sera créé <b>avant</b> d'écrire quoi que ce soit, et signale les lignes douteuses.
 Relisez cet aperçu : c'est le seul moment où corriger est facile.</p>
 
+<p>Les dossiers à la corbeille n'apparaissent ni dans la liste, ni dans les totaux, ni dans l'export.</p>
+
 <!-- ══════════════════════════════════════════════════ -->
-<h2 id="lots"><span class="num">14.</span> Les lots de dépôt</h2>
+<h2 id="lots"><span class="num">17.</span> Les lots de dépôt</h2>
 
 <p><b>À quoi ça sert :</b> constituer le paquet de dossiers que vous envoyez au délégataire,
-et sortir le tableau qu'il attend.</p>
+sortir le tableau qu'il attend, puis suivre sa réponse.</p>
 
 <h3>Constituer le lot</h3>
 <ol>
-  <li><span class="chemin">Lots de dépôt</span> → créez un lot (numéro, délégataire) ;</li>
+  <li><span class="chemin">Lots de dépôt</span> → créez un lot (délégataire) ;</li>
   <li>dans <b>Ajouter des dossiers</b>, cochez et cliquez <b>Ajouter au lot</b>.</li>
 </ol>
 <div class="bloc">
@@ -574,12 +703,49 @@ déjà dans un autre lot.</p>
       trois semaines plus tard.</li>
 </ul>
 
-<h3>Avant d'envoyer</h3>
+<h3>Déposer</h3>
 <p>Vérifiez que chaque dossier du lot est <b>Complet et validé</b> (chapitre 9), puis
-<b>verrouillez</b> les dossiers déposés. Un dossier verrouillé ne bouge plus, par personne.</p>
+<b>Déposer le lot</b> : le bouton reste grisé tant qu'un dossier bloque, et le dépôt verrouille
+tous les dossiers du lot.</p>
+
+<h3>Statuer le lot et ses dossiers</h3>
+<p>Au retour du délégataire, sur la fiche d'un lot déposé : l'<b>état du lot</b> (déposé, en
+instruction, validé, rejeté), sa <b>référence EMMY</b>, et le <b>statut de tous ses dossiers d'un
+coup</b> — statut dossier, administratif, facturation. Un axe laissé sur « — » n'est pas modifié.
+Chaque dossier garde sa ligne au journal, comme s'il avait été modifié à la main.</p>
+<p>Le bouton <b>Créer l'appel à paiement</b> prépare ensuite la facturation des dossiers du lot
+(chapitre 18).</p>
 
 <!-- ══════════════════════════════════════════════════ -->
-<h2 id="simulateur"><span class="num">15.</span> Le simulateur de marge</h2>
+<h2 id="aap"><span class="num">18.</span> Les appels à paiement</h2>
+
+<p><b>À quoi ça sert :</b> facturer au délégataire ce qu'il a validé, et vérifier qu'il vous a
+payé ce qu'il doit.</p>
+
+<h3>Le trajet</h3>
+<table>
+  <tr><th style="width:190px">Étape</th><th>Ce que vous faites</th></tr>
+  <tr><td><b>En cours de création</b></td><td>L'appel est créé depuis un lot déposé (bouton sur la fiche du lot) ou vide, depuis la page <span class="chemin">Appels à paiement</span>. Vous saisissez le <b>n° et la date de l'AAF</b>, et, sur chaque dossier, ce que le délégataire a <b>réellement validé</b> : volume et prime. Une case vide reprend ce qui a été déposé.</td></tr>
+  <tr><td><b>Validé</b></td><td>« Valider l'appel » fige les montants. On peut encore le rouvrir tant que la facture n'est pas émise.</td></tr>
+  <tr><td><b>Paiement en attente</b></td><td>« Émettre la facture » : elle prend le prochain numéro de la série de la société. Si vous l'avez déjà faite dans un autre logiciel, saisissez son numéro : la série n'est pas touchée.</td></tr>
+  <tr><td><b>Paiement reçu</b></td><td>La date et le montant du virement.</td></tr>
+</table>
+
+<div class="bloc att">
+<p><b>Les deux écarts à surveiller.</b> L'écran signale tout dossier <b>validé autrement que
+déposé</b> (volume rogné, autre prix), avec l'écart en MWh et en euros. Et à l'encaissement, un
+<b>virement qui ne correspond pas à la facture</b>, au centime près. Un écart qu'on ne voit pas,
+c'est de la marge perdue sans le savoir.</p>
+</div>
+
+<p>Le bloc <b>Statuer les dossiers de l'appel</b> passe tous ses dossiers d'un coup — par exemple
+en « AAF » puis en « Facturé ». La facture au délégataire s'imprime avec une ligne par dossier,
+la référence de son AAF en tête et votre IBAN.</p>
+<p>Cet écran n'est fait que de montants : il demande le droit de gérer les lots <b>et</b> celui de
+voir la marge.</p>
+
+<!-- ══════════════════════════════════════════════════ -->
+<h2 id="simulateur"><span class="num">19.</span> Le simulateur de marge</h2>
 
 <p><b>À quoi ça sert :</b> répondre « ça vaut combien ? » au téléphone, sans rien créer.</p>
 <p>Choisissez une fiche, une quantité, une zone, un secteur, un régime, un deal : le résultat
@@ -587,7 +753,7 @@ s'affiche. <b>Rien n'est enregistré.</b> C'est l'outil à utiliser pour tester 
 plutôt que de créer un dossier bidon qu'il faudra supprimer.</p>
 
 <!-- ══════════════════════════════════════════════════ -->
-<h2 id="referentiel"><span class="num">16.</span> Le référentiel des fiches</h2>
+<h2 id="referentiel"><span class="num">20.</span> Le référentiel des fiches</h2>
 
 <p><b>À quoi ça sert :</b> consulter les fiches et comprendre d'où sort un chiffre.</p>
 <p>Pour chaque fiche : ses <b>versions</b>, leurs dates de validité, leurs coefficients,
@@ -600,19 +766,57 @@ C'est pour ça que <b>la date d'engagement doit être exacte</b>.</p>
 </div>
 
 <!-- ══════════════════════════════════════════════════ -->
-<h2 id="parametrage"><span class="num">17.</span> Le paramétrage</h2>
+<h2 id="corbeille"><span class="num">21.</span> La corbeille</h2>
+
+<p><b>À quoi ça sert :</b> retirer un doublon, un dossier de test ou un dossier abandonné, sans
+perdre la possibilité de revenir en arrière.</p>
+
+<h3>Mettre à la corbeille</h3>
+<p><span class="chemin">Dossier → bouton Corbeille</span> → indiquez <b>pourquoi</b> (c'est ce que
+lira celui qui voudra le récupérer) → <b>Mettre à la corbeille</b>.</p>
+<p>Le dossier disparaît alors <b>de partout</b> : liste, totaux, tableau de bord, rappels, planning,
+S.A.V, appels à paiement. Son client ne peut plus se connecter à son espace. Rien n'est effacé :
+sa fiche reste consultable, en lecture seule, avec un bandeau rouge.</p>
+
+<div class="bloc att">
+<p><b>Ce qui empêche la corbeille</b> — le bouton le dit et dit quoi faire : un dossier
+<b>verrouillé</b> (déposé), un dossier <b>dans un lot</b>, un dossier <b>facturé</b> (même d'un
+simple acompte), un dossier <b>dans un appel à paiement</b>. Ces dossiers sont liés à des documents
+que d'autres détiennent.</p>
+</div>
+
+<h3>La page Corbeille</h3>
+<ul>
+  <li>chaque dossier supprimé, avec qui, quand et pourquoi ;</li>
+  <li><b>Récupérer la sélection</b> — le dossier revient exactement comme il était, accès client compris ;</li>
+  <li><b>Supprimer définitivement</b> — avec la case de confirmation cochée. Le dossier et tout ce qui
+      n'appartient qu'à lui sont effacés pour de bon. Le journal garde une ligne : quel dossier,
+      pourquoi, par qui.</li>
+</ul>
+<div class="bloc dgr">
+<p><b>La suppression définitive ne se rattrape pas.</b> Elle est refusée pour un dossier dont le
+devis est numéroté : la série de devis doit rester continue, numéro par numéro.</p>
+</div>
+<p>La corbeille est réservée au droit « supprimer un dossier » (gérant, ADV).</p>
+
+<!-- ══════════════════════════════════════════════════ -->
+<h2 id="parametrage"><span class="num">22.</span> Le paramétrage</h2>
 
 <p>Les réglages. On y touche rarement, mais tout le reste en dépend.</p>
 
 <table>
   <tr><th style="width:190px">Onglet</th><th>Ce qu'on y règle</th></tr>
   <tr><td><b>Délégataires</b></td><td>Leurs coordonnées et le <b>gabarit</b> de leur tableau de dépôt (quelles colonnes, dans quel ordre, sous quel nom).</td></tr>
-  <tr><td><b>Deals</b></td><td>Vos accords commerciaux et leurs <b>versions datées</b> : prix au MWh par régime et par charte. Ne modifiez pas une version passée — créez-en une nouvelle, sinon vous réécrivez l'historique de marge.</td></tr>
-  <tr><td><b>Catalogue produits</b></td><td>Les produits et leurs prix, pour les devis.</td></tr>
-  <tr><td><b>Pièces</b></td><td>Les <b>types de pièces</b> et les <b>liasses</b>. La liasse dit quelles pièces sont exigées pour un délégataire + une fiche, et lesquelles sont obligatoires. C'est ce qui fait marcher le pourcentage de complétude.</td></tr>
-  <tr><td><b>RGE</b></td><td>Les installateurs et leurs certifications, avec les dates. L'onglet signale les <b>certifications échues</b> — un dossier signé avec un RGE périmé est un dossier refusé.</td></tr>
-  <tr><td><b>Workflow</b></td><td>Les <b>étapes du pipeline</b>, les <b>statuts</b> de chaque axe et leurs couleurs, et les <b>unités d'affaire</b>.</td></tr>
-  <tr><td><b>Contrôle</b></td><td>Les bureaux de contrôle (COFRAC).</td></tr>
+  <tr><td><b>Deals et tarifs</b></td><td>Vos accords commerciaux et leurs <b>versions datées</b> : prix au MWh par régime et par charte, et le <b>mode de reversement</b> (cumulé ou au choix). Ne modifiez pas une version passée — créez-en une nouvelle, sinon vous réécrivez l'historique de marge.</td></tr>
+  <tr><td><b>Installateurs RGE</b></td><td>Les installateurs et leurs certifications, avec les dates. L'onglet signale les <b>certifications échues</b> — un dossier signé avec un RGE périmé est un dossier refusé.</td></tr>
+  <tr><td><b>Pièces et liasses</b></td><td>Les <b>types de pièces</b> et les <b>liasses</b>. La liasse dit quelles pièces sont exigées pour un délégataire + une fiche, et lesquelles sont obligatoires.</td></tr>
+  <tr><td><b>Étapes et statuts</b></td><td>Les <b>étapes du pipeline</b>, les <b>statuts</b> de chaque axe et leurs couleurs, et les <b>unités d'affaire</b> — vos régies.</td></tr>
+  <tr><td><b>Bureaux de contrôle</b></td><td>Les bureaux COFRAC et leur date de fin d'accréditation : un contrôle réalisé après cette date est signalé.</td></tr>
+  <tr><td><b>Catalogue produits</b></td><td>Les produits posés, pour les opérations et les devis.</td></tr>
+  <tr><td><b>Types d'intervention</b></td><td>Les calendriers du planning : libellé, couleur, ordre.</td></tr>
+  <tr><td><b>S.A.V</b></td><td>Les types, statuts et motifs de S.A.V. Un statut peut « clore le S.A.V ».</td></tr>
+  <tr><td><b>Sociétés émettrices</b></td><td>Les sociétés au nom desquelles partent devis, factures et appels à paiement : identité, coordonnées, assurance décennale, préfixes de numéros, mentions de facture, compte bancaire, logo. <b>Chaque société affiche en tête ce qui bloque l'émission</b> de ses documents.</td></tr>
+  <tr><td><b>Autres listes</b></td><td>Quatorze listes : sources de lead, AMO / MAR, mandataires Anah, logiciels d'audit, gestionnaires de réseau, sociétés d'exploitation, marques, comptes bancaires… Chacune dit à quoi elle sert — ou qu'elle ne sert encore à rien.</td></tr>
 </table>
 
 <div class="bloc att">
@@ -622,25 +826,38 @@ créer le <b>délégataire</b> → créer son <b>deal</b> et sa première versio
 n'auront aucun contrôle de complétude.</p>
 </div>
 
+<div class="bloc">
+<p><b>Sur les sociétés émettrices, trois choses refusées exprès :</b> un SIRET qui ne commence pas
+par le SIREN, un numéro de TVA dont la clé ne correspond pas au SIREN, et le changement de
+préfixe d'une série de numéros déjà entamée dans l'année (le changement se fait au 1er janvier).
+Un IBAN est contrôlé par sa clé : un seul chiffre faux est refusé.</p>
+</div>
+
+<p>Rien ne se supprime dans le paramétrage : une valeur retirée se <b>désactive</b>. Elle sort des
+listes de choix et reste lisible là où elle a servi.</p>
+
 <!-- ══════════════════════════════════════════════════ -->
-<h2 id="comptes"><span class="num">18.</span> Comptes et rôles</h2>
+<h2 id="comptes"><span class="num">23.</span> Comptes et rôles</h2>
 
 <h3>Les quatre rôles livrés</h3>
 <table>
   <tr><th style="width:130px">Rôle</th><th>Ce qu'il peut</th></tr>
   <tr><td><b>Gérant</b></td><td>Tout, y compris les ratios de marge et les comptes.</td></tr>
-  <tr><td><b>ADV</b></td><td>Pilote les dossiers de bout en bout et voit la marge, mais ne touche ni aux ratios ni aux comptes.</td></tr>
+  <tr><td><b>ADV</b></td><td>Pilote les dossiers de bout en bout, voit la marge, organise le planning de l'équipe et gère la corbeille, mais ne touche ni aux ratios ni aux comptes.</td></tr>
   <tr><td><b>Régie</b></td><td>Saisit et suit les dossiers de <b>sa seule unité d'affaire</b>. Ne voit aucun montant.</td></tr>
   <tr><td><b>Apporteur</b></td><td>Consulte l'avancement de ses dossiers. Lecture seule, sans montants.</td></tr>
 </table>
 
-<h3>Les deux droits qui comptent vraiment</h3>
+<h3>Les droits qui comptent vraiment</h3>
 <ul>
   <li><b>Voir les montants et la marge</b> — sans lui, les chiffres ne sont pas envoyés par le
       serveur, pas seulement masqués. C'est ce qui permet d'ouvrir l'outil à une régie
       sans lui montrer votre grille.</li>
   <li><b>Voir les dossiers de toutes les unités d'affaire</b> — sans lui, la personne ne voit
       que son périmètre.</li>
+  <li><b>Voir et organiser le planning de toute l'équipe</b> — sans lui, chacun ne voit et ne
+      déplace que ses propres interventions.</li>
+  <li><b>Supprimer un dossier</b> — la corbeille, et la suppression définitive.</li>
 </ul>
 
 <h3>Créer un compte</h3>
@@ -656,7 +873,7 @@ n'auront aucun contrôle de complétude.</p>
 </div>
 
 <!-- ══════════════════════════════════════════════════ -->
-<h2 id="pieges"><span class="num">19.</span> Les 8 pièges — à lire une fois, à retenir</h2>
+<h2 id="pieges"><span class="num">24.</span> Les 10 pièges — à lire une fois, à retenir</h2>
 
 <ol>
   <li><b>Fermer la fenêtre noire.</b> Le logiciel s'arrête. Réduisez-la, ne la fermez pas.</li>
@@ -669,12 +886,16 @@ n'auront aucun contrôle de complétude.</p>
       sans aucun message.</li>
   <li><b>Croire qu'on peut modifier une facture émise.</b> Non. Faites un avoir.</li>
   <li><b>Déposer un lot sans vérifier la complétude.</b> Le refus arrive trois semaines plus tard.</li>
-  <li><b>Oublier de verrouiller après le dépôt.</b> Un dossier déposé qui bouge encore,
-      c'est un écart entre ce que vous avez envoyé et ce que vous avez en base.</li>
+  <li><b>Facturer l'appel à paiement sans relire l'AAF.</b> Reportez d'abord ce que le délégataire
+      a réellement validé, dossier par dossier : la facture partira sur ces montants.</li>
+  <li><b>Déplacer un rendez-vous confirmé sans prévenir le client.</b> Il redevient « planifié » :
+      il faut le reconfirmer.</li>
+  <li><b>Supprimer définitivement au lieu de mettre à la corbeille.</b> La corbeille se rattrape,
+      la suppression définitive non.</li>
 </ol>
 
 <!-- ══════════════════════════════════════════════════ -->
-<h2 id="sauvegarde"><span class="num">20.</span> Sauvegarder</h2>
+<h2 id="sauvegarde"><span class="num">25.</span> Sauvegarder</h2>
 
 <p><b>Toutes vos données tiennent dans un seul fichier :</b> <code>db\cee.db</code>,
 dans le dossier <code>cee-platform</code>. Les pièces jointes sont à côté, dans <code>fichiers\</code>.</p>
@@ -693,10 +914,11 @@ copie incomplète — qui s'ouvre sans erreur, ce qui est pire que pas de copie 
 </div>
 
 <p>Une sauvegarde par semaine, et une avant chaque grosse opération (import en masse,
-mise à jour). Gardez les trois dernières.</p>
+mise à jour). Gardez les trois dernières. Le dossier <code>sauvegardes\</code> contient les copies
+faites avant chaque mise à jour du logiciel.</p>
 
 <!-- ══════════════════════════════════════════════════ -->
-<h2 id="depannage"><span class="num">21.</span> Que faire si…</h2>
+<h2 id="depannage"><span class="num">26.</span> Que faire si…</h2>
 
 <table>
   <tr><th style="width:290px">Symptôme</th><th>Quoi faire</th></tr>
@@ -724,12 +946,25 @@ mise à jour). Gardez les trois dernières.</p>
   </tr>
   <tr>
     <td><b>Un champ refuse de s'enregistrer</b></td>
-    <td>Lisez le bandeau en haut de la page : il dit lequel et pourquoi. Rien n'a été enregistré, corrigez et renvoyez.</td>
+    <td>Lisez le bandeau en haut de la page ou de l'onglet : il dit lequel et pourquoi. Rien n'a été enregistré, corrigez et renvoyez.</td>
   </tr>
   <tr>
     <td><b>Le bouton est gris / rien ne se passe</b></td>
-    <td>Soit le dossier est <b>verrouillé</b> (étiquette rouge en haut), soit votre rôle n'a pas ce droit
-        (vérifiez dans <span class="chemin">Mon compte</span>).</td>
+    <td>Soit le dossier est <b>verrouillé</b> (étiquette rouge en haut) ou <b>à la corbeille</b> (bandeau rouge),
+        soit votre rôle n'a pas ce droit (vérifiez dans <span class="chemin">Mon compte</span>).</td>
+  </tr>
+  <tr>
+    <td><b>Le devis ou la facture refuse de s'émettre</b></td>
+    <td>La société émettrice est incomplète. <span class="chemin">Paramétrage → Sociétés émettrices</span>
+        dit exactement ce qui manque (SIRET, assurance décennale…).</td>
+  </tr>
+  <tr>
+    <td><b>La marge affiche un tiret</b></td>
+    <td>Le deal n'a pas de mode de reversement. Voir le chapitre 8.</td>
+  </tr>
+  <tr>
+    <td><b>Un dossier a disparu</b></td>
+    <td>Regardez dans la <span class="chemin">Corbeille</span> : son motif et l'auteur de la suppression y sont.</td>
   </tr>
   <tr>
     <td><b>Une modification n'apparaît pas</b></td>
@@ -752,31 +987,34 @@ Avec ça, la cause se trouve presque toujours du premier coup.</p>
 </div>
 
 <!-- ══════════════════════════════════════════════════ -->
-<h2 id="technique"><span class="num">22.</span> Pour votre développeur</h2>
+<h2 id="technique"><span class="num">27.</span> Pour votre développeur</h2>
 
 <p>Cette partie ne sert pas au travail quotidien. Elle est là pour la personne qui maintient
 le logiciel.</p>
 
 <table>
   <tr><th style="width:210px">Commande</th><th>Ce qu'elle fait</th></tr>
-  <tr><td><code>./tester.sh</code></td><td>Lance toutes les suites de contrôle des règles métier (calculs, arrondis, numérotation, droits).</td></tr>
+  <tr><td><code>./tester.sh</code></td><td>Lance toutes les suites de contrôle des règles métier (calculs, arrondis, numérotation, droits, acomptes, planning, appels à paiement, S.A.V et corbeille, listes et sociétés), sur une copie de la base.</td></tr>
   <tr><td><code>./recette.sh</code></td><td>Démarre un vrai serveur sur une <b>copie jetable</b> de la base et pilote un vrai navigateur : chaque écran, chaque formulaire, chaque champ, le cycle commercial et l'espace client.</td></tr>
-  <tr><td><code>node jeu-demo.mjs</code></td><td>Plante un dossier de démonstration complet, pour s'entraîner sans toucher aux vrais dossiers.</td></tr>
-  <tr><td><code>node jeu-demo.mjs --retirer</code></td><td>Retire exactement ce que la commande précédente avait planté, et rien d'autre.</td></tr>
+  <tr><td><code>node jeu-demo.mjs</code></td><td>Plante un dossier de démonstration complet, sous une société d'essai aux identifiants manifestement faux, pour s'entraîner sans toucher aux vrais dossiers.</td></tr>
+  <tr><td><code>node jeu-demo.mjs --retirer</code></td><td>Retire exactement ce que la commande précédente avait planté — et ce qu'un essai y a ajouté (rappels, interventions, S.A.V…) —, et rien d'autre.</td></tr>
   <tr><td><code>npm run seed</code></td><td><b>Efface la base</b> et recharge le jeu de démonstration. À n'utiliser que sur une base qu'on accepte de perdre.</td></tr>
 </table>
 
 <div class="bloc att">
-<p><b>Deux règles de sécurité :</b></p>
+<p><b>Trois règles de sécurité :</b></p>
 <ul>
 <li>n'écrivez jamais dans <code>db\cee.db</code> pendant que le serveur tourne — arrêtez-le d'abord ;</li>
 <li>la mise à niveau du schéma est <b>additive</b> : elle ajoute tables, colonnes et index manquants,
-    et ne supprime jamais rien. Une transformation destructrice reste une décision humaine, écrite à la main.</li>
+    et ne supprime jamais rien. Une transformation destructrice reste une décision humaine, écrite à la main ;</li>
+<li>gardez les fichiers en fins de ligne Unix (LF) : le dépôt l'impose par <code>.gitattributes</code>.
+    Un éditeur qui réécrirait <code>db/schema.sql</code> autrement est sans danger depuis le 30/09
+    (<code>schema-crlf.mjs</code> le vérifie), mais un script <code>.sh</code> ne s'exécuterait plus.</li>
 </ul>
 </div>
 
 <p style="margin-top:40px;padding-top:16px;border-top:1px solid var(--trait);color:var(--gris);font-size:13px">
-Guide d'utilisation de la plateforme CEE — Net Strategy.
+Guide d'utilisation de la plateforme CEE — Net Strategy. Mis à jour le 5 octobre 2026.
 Une question sans réponse dans ce guide est un manque du guide : signalez-la.
 </p>
 

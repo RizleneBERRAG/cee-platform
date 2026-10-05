@@ -161,10 +161,17 @@ export default async function FicheDossier({ params, searchParams }) {
           )}
           {/* Prévisualiser n'attribue aucun numéro : le lien peut être ouvert autant de
               fois qu'on veut sans trouer la série de devis de la société. L'émission,
-              elle, est un POST — depuis l'onglet Commercial. */}
+              elle, est un POST : c'est le seul geste qui prend un numéro, et un
+              rafraîchissement ne doit pas pouvoir le rejouer. Ce bouton manquait : la
+              route d'émission existait, mais rien dans l'écran ne l'appelait. */}
           <a href={`/dossiers/${d.id}/devis`} target="_blank" rel="noopener" className="btn">
             {d.num_devis ? `Devis ${d.num_devis}` : 'Aperçu du devis'}
           </a>
+          {a(u, 'dossier.modifier') && !d.num_devis && !d.supprime_le && (
+            <form method="post" action={`/dossiers/${d.id}/devis`} target="_blank">
+              <button className="btn">Émettre le devis</button>
+            </form>
+          )}
           {/* Même règle pour la facture, en plus strict : une facture émise ne se
               renumérote ni ne se modifie. Ce lien n'écrit rien. */}
           <a href={`/dossiers/${d.id}/facture`} target="_blank" rel="noopener" className="btn">
