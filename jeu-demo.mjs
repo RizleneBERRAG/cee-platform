@@ -50,9 +50,31 @@ const NOM_DEAL = 'DEAL DE DÉMONSTRATION'
 const NOM_DELEG = 'DÉLÉGATAIRE DE DÉMONSTRATION'
 const NOM_CLIENT = 'EARL DE LA DÉMONSTRATION'
 
+/** Une table ajoutée depuis (rappels, planning, S.A.V…) peut manquer à une base ancienne. */
+const existe = (table) => !!un("SELECT 1 AS x FROM sqlite_master WHERE type = 'table' AND name = ?", [table])
+
 function retirer() {
+  db.exec('BEGIN')
+  try {
+    retirerSansTransaction()
+    db.exec('COMMIT')
+  } catch (e) {
+    db.exec('ROLLBACK')
+    throw e
+  }
+}
+
+function retirerSansTransaction() {
   const d = un('SELECT id FROM dossier WHERE numero = ?', [NUM_DOSSIER])
   if (d) {
+    // Ce qu'un essai a pu ajouter au dossier depuis les écrans : rappels, planning, S.A.V,
+    // appel à paiement, pièces, contrôles, intervenants. Le S.A.V avant l'intervention
+    // qu'il désigne ; les tables absentes d'une base ancienne sont passées.
+    for (const t of ['rappel', 'sav', 'intervention', 'appel_paiement_ligne', 'document_dossier',
+      'controle', 'audit_energetique', 'dossier_intervenant']) {
+      if (existe(t)) run(`DELETE FROM ${t} WHERE dossier_id = ?`, [d.id])
+    }
+    run('DELETE FROM journal_champ WHERE dossier_id = ?', [d.id])
     for (const f of tous('SELECT id FROM facture WHERE dossier_id = ?', [d.id])) {
       run('DELETE FROM facture_ligne WHERE facture_id = ?', [f.id])
     }
@@ -76,12 +98,18 @@ function retirer() {
     if (ref?.beneficiaire_id) run('DELETE FROM beneficiaire WHERE id = ?', [ref.beneficiaire_id])
     if (ref?.site_id) run('DELETE FROM site WHERE id = ?', [ref.site_id])
   }
+  // Un appel à paiement d'essai désigne le délégataire et le lot de démonstration.
+  const delegDemo = un('SELECT id FROM delegataire WHERE nom = ?', [NOM_DELEG])
+  if (delegDemo && existe('appel_paiement')) {
+    run('DELETE FROM appel_paiement_ligne WHERE appel_id IN (SELECT id FROM appel_paiement WHERE delegataire_id = ?)', [delegDemo.id])
+    run('DELETE FROM appel_paiement WHERE delegataire_id = ?', [delegDemo.id])
+  }
   run('DELETE FROM lot WHERE numero = ?', [NUM_LOT])
   const deal = un('SELECT id FROM deal WHERE libelle = ?', [NOM_DEAL])
   if (deal) { run('DELETE FROM deal_fiche WHERE deal_id = ?', [deal.id]); run('DELETE FROM deal WHERE id = ?', [deal.id]) }
   run('DELETE FROM delegataire WHERE nom = ?', [NOM_DELEG])
   run('DELETE FROM entite_emettrice WHERE code = ?', [CODE_ENTITE])
-  console.log('Jeu de démonstration retiré. Rien d\'autre n\'a été touché.')
+  if (RETIRER) console.log('Jeu de démonstration retiré. Rien d\'autre n\'a été touché.')
 }
 
 if (RETIRER) { retirer(); process.exit(0) }

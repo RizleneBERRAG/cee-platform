@@ -14,9 +14,10 @@ export default async function ImportReferentiel() {
     <>
       <h1>Importer le référentiel des fiches</h1>
       <p className="lede">
-        Le prototype ne contient que huit fiches, choisies pour illustrer les cas de figure.
-        Cet écran permet de charger le catalogue réel à partir d'un fichier CSV — celui de
-        votre délégataire, ou une liste constituée à partir des arrêtés.
+        Cet écran charge des fiches à partir d'un fichier CSV — le catalogue de votre
+        délégataire, ou une liste constituée à partir des arrêtés. Le chargement ajoute les
+        fiches et versions manquantes, met à jour le libellé des fiches existantes, et
+        n'efface ni ne recalcule aucun dossier.
       </p>
 
       <div className="grid k2">

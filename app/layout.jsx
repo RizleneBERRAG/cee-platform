@@ -57,7 +57,7 @@ export default async function RootLayout({ children }) {
           <aside className="side">
             <div className="brand">
               Plateforme CEE
-              <small>Prototype — tranche verticale</small>
+              <small>Gestion des dossiers CEE</small>
             </div>
             <nav>
               {visibles.map(([href, label]) => (
